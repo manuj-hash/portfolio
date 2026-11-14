@@ -10,8 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
-      // Bulletproof direct file opener fallback
-      // Browsers block ES modules on file:// protocol, so auto-redirect to standalone zero-dependency build
+      // Browsers block ES modules on file:// protocol, so open the standalone build.
       if (window.location.protocol === 'file:') {
         var target = 'index-standalone.html';
         if (window.location.pathname.indexOf('/dist/') !== -1 || window.location.pathname.indexOf('\\dist\\') !== -1) {
@@ -22,18 +21,7 @@
     </script>
   </head>
   <body class="bg-mde-void text-mde-text selection:bg-mde-cyan selection:text-black overflow-x-hidden antialiased font-sans">
-    <div id="root">
-      <div id="boot-loader-fallback" style="position:fixed;inset:0;background:#030407;color:#00F2FE;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.15em;z-index:99999;">
-        <div style="font-size:22px;font-weight:bold;margin-bottom:12px;color:#fff;">MANUJ <span style="color:#00F2FE;">U.</span> // MDE</div>
-        <div style="color:#8E9BB0;margin-bottom:18px;">INITIALIZING DIGITAL ENVIRONMENT...</div>
-        <div style="width:220px;height:2px;background:rgba(255,255,255,0.1);overflow:hidden;border-radius:2px;">
-          <div style="width:100%;height:100%;background:#00F2FE;animation:pulse 1.5s infinite;"></div>
-        </div>
-        <div style="margin-top:20px;font-size:11px;color:#64748b;">
-          If this screen remains static, <a href="index-standalone.html" style="color:#00ff88;text-decoration:underline;">click here to open instant standalone mode</a>.
-        </div>
-      </div>
-    </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
