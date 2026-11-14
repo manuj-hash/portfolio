@@ -1,0 +1,2513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MANUJ U. // MDE — Developer Portfolio</title>
+<style>
+/* ═══════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+═══════════════════════════════════════════════ */
+:root {
+  --bg: #030407;
+  --bg2: #070b12;
+  --bg3: #0d1117;
+  --cyan: #00F2FE;
+  --cyan-dim: rgba(0,242,254,0.15);
+  --cyan-mid: rgba(0,242,254,0.4);
+  --violet: #8B5CF6;
+  --violet-dim: rgba(139,92,246,0.15);
+  --violet-mid: rgba(139,92,246,0.4);
+  --green: #00ff88;
+  --red: #ff4466;
+  --text: #e2e8f0;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+  --border: rgba(0,242,254,0.12);
+  --border-hover: rgba(0,242,254,0.35);
+  --glass: rgba(7,11,18,0.85);
+  --radius: 8px;
+  --radius-lg: 14px;
+  --font-main: system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono: 'Cascadia Code','Fira Code','Consolas','Courier New',monospace;
+}
+
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-main);
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+ul{list-style:none}
+
+/* ═══════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════ */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--cyan-mid);border-radius:3px}
+
+/* ═══════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+═══════════════════════════════════════════════ */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+@keyframes progressBar{from{width:0}to{width:100%}}
+@keyframes bootFadeOut{from{opacity:1;visibility:visible}to{opacity:0;visibility:hidden}}
+@keyframes glow{0%,100%{text-shadow:0 0 10px var(--cyan),0 0 25px var(--cyan),0 0 50px var(--cyan)}50%{text-shadow:0 0 20px var(--cyan),0 0 50px var(--cyan),0 0 80px var(--cyan)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(0,242,254,0.4)}70%{box-shadow:0 0 0 8px rgba(0,242,254,0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes spinSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes gridScroll{from{background-position:0 0}to{background-position:0 60px}}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes typeIn{from{width:0}to{width:100%}}
+
+/* ═══════════════════════════════════════════════
+   BOOT SEQUENCE OVERLAY
+═══════════════════════════════════════════════ */
+#boot-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:0;
+  transition:opacity 0.7s ease, visibility 0.7s ease;
+}
+#boot-overlay.hidden{
+  opacity:0;visibility:hidden;pointer-events:none;
+}
+.boot-inner{
+  width:min(600px,90vw);
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+}
+.boot-logo{
+  font-size:1.5rem;
+  color:var(--cyan);
+  letter-spacing:0.3em;
+  text-align:center;
+  margin-bottom:2rem;
+  font-weight:700;
+  text-shadow:0 0 20px var(--cyan);
+}
+.boot-lines{
+  display:flex;flex-direction:column;gap:4px;
+  margin-bottom:1.5rem;
+  min-height:140px;
+}
+.boot-line{
+  color:var(--text-dim);
+  opacity:0;
+  animation:fadeIn 0.3s ease forwards;
+}
+.boot-line .ok{color:var(--green)}
+.boot-line .warn{color:#fbbf24}
+.boot-line .info{color:var(--cyan)}
+.boot-progress-wrap{
+  width:100%;
+  height:2px;
+  background:rgba(255,255,255,0.08);
+  border-radius:2px;
+  overflow:hidden;
+  margin-bottom:1rem;
+}
+.boot-progress-bar{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--violet),var(--cyan));
+  animation:progressBar 1.8s ease forwards;
+  animation-delay:0.2s;
+  box-shadow:0 0 10px var(--cyan);
+}
+.boot-cursor{
+  display:inline-block;
+  width:8px;height:14px;
+  background:var(--cyan);
+  animation:blink 1s step-end infinite;
+  vertical-align:middle;
+  margin-left:4px;
+}
+.boot-skip{
+  text-align:center;
+  color:var(--text-muted);
+  font-size:0.72rem;
+  margin-top:1rem;
+  letter-spacing:0.1em;
+}
+
+/* ═══════════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════════ */
+#navbar{
+  position:fixed;top:0;left:0;right:0;z-index:999;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;
+  height:64px;
+  background:var(--glass);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  transition:border-bottom 0.3s;
+}
+#navbar.scrolled{border-bottom:1px solid var(--border)}
+.nav-logo{
+  font-family:var(--font-mono);
+  font-size:1rem;
+  font-weight:700;
+  color:var(--text);
+  letter-spacing:0.08em;
+  display:flex;align-items:center;gap:0.5rem;
+  white-space:nowrap;
+}
+.nav-logo .dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+  animation:pulseGlow 2s infinite;
+}
+.nav-links{
+  display:flex;align-items:center;gap:0.15rem;
+}
+.nav-links a{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.06em;
+  padding:0.4rem 0.75rem;
+  border-radius:4px;
+  color:var(--text-muted);
+  transition:color 0.2s,background 0.2s;
+  white-space:nowrap;
+}
+.nav-links a:hover,.nav-links a.active{
+  color:var(--cyan);
+  background:var(--cyan-dim);
+}
+.nav-right{
+  display:flex;align-items:center;gap:1rem;
+}
+.nav-clock{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  color:var(--text-muted);
+  letter-spacing:0.08em;
+}
+.btn-terminal{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.1em;
+  padding:0.4rem 1rem;
+  border:1px solid var(--cyan-mid);
+  border-radius:4px;
+  color:var(--cyan);
+  background:var(--cyan-dim);
+  transition:all 0.2s;
+}
+.btn-terminal:hover{
+  background:var(--cyan);
+  color:var(--bg);
+  box-shadow:0 0 16px var(--cyan-mid);
+}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:4px;cursor:pointer}
+.hamburger span{width:22px;height:2px;background:var(--text-dim);border-radius:2px;transition:all 0.3s}
+.nav-mobile{display:none}
+
+/* ═══════════════════════════════════════════════
+   SECTIONS — SHARED
+═══════════════════════════════════════════════ */
+section{padding:7rem 2rem;position:relative}
+.container{max-width:1200px;margin:0 auto}
+.section-label{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.25em;
+  color:var(--cyan);
+  text-transform:uppercase;
+  margin-bottom:0.75rem;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.section-label::before{
+  content:'';display:block;
+  width:28px;height:1px;
+  background:var(--cyan);
+}
+.section-heading{
+  font-size:clamp(2rem,4vw,2.8rem);
+  font-weight:800;
+  letter-spacing:-0.02em;
+  line-height:1.1;
+  margin-bottom:1rem;
+}
+.section-heading .accent{color:var(--cyan)}
+.divider{
+  width:60px;height:2px;
+  background:linear-gradient(90deg,var(--cyan),transparent);
+  margin:1.5rem 0;
+}
+
+/* ═══════════════════════════════════════════════
+   HOME / COMMAND CENTER
+═══════════════════════════════════════════════ */
+#command{
+  min-height:100vh;
+  display:flex;align-items:center;
+  position:relative;
+  overflow:hidden;
+  padding-top:8rem;
+}
+#particles-canvas{
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+.hero-bg-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,242,254,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,242,254,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+  animation:gridScroll 4s linear infinite;
+  pointer-events:none;
+  z-index:0;
+}
+.hero-content{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  gap:0;
+}
+.hero-pre{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  letter-spacing:0.3em;
+  color:var(--cyan);
+  margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.hero-pre::before{content:'>';color:var(--violet)}
+.hero-name{
+  font-size:clamp(4rem,10vw,8rem);
+  font-weight:900;
+  letter-spacing:-0.04em;
+  line-height:0.9;
+  margin-bottom:1.5rem;
+}
+.hero-name .glow{
+  color:var(--cyan);
+  animation:glow 3s ease-in-out infinite;
+}
+.hero-keywords{
+  display:flex;flex-wrap:wrap;gap:0.6rem;
+  margin-bottom:2rem;
+}
+.hero-keyword{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  letter-spacing:0.12em;
+  padding:0.45rem 1.1rem;
+  border:1px solid var(--border-hover);
+  border-radius:4px;
+  color:var(--text-dim);
+  background:rgba(255,255,255,0.03);
+  cursor:pointer;
+  transition:all 0.25s;
+  position:relative;
+}
+.hero-keyword:hover,.hero-keyword.active{
+  border-color:var(--cyan);
+  color:var(--cyan);
+  background:var(--cyan-dim);
+  box-shadow:0 0 12px var(--cyan-dim);
+}
+.keyword-panel{
+  display:none;
+  position:absolute;
+  top:0;right:0;
+  width:340px;
+  background:var(--bg3);
+  border:1px solid var(--border-hover);
+  border-radius:var(--radius-lg);
+  padding:1.5rem;
+  z-index:10;
+  animation:slideInRight 0.25s ease;
+  box-shadow:0 0 40px rgba(0,0,0,0.5);
+}
+.keyword-panel.show{display:block}
+.kp-title{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.2em;
+  color:var(--cyan);
+  margin-bottom:0.5rem;
+}
+.kp-heading{
+  font-size:1.1rem;font-weight:700;
+  margin-bottom:0.75rem;
+}
+.kp-desc{
+  font-size:0.85rem;color:var(--text-dim);
+  margin-bottom:1rem;
+  line-height:1.6;
+}
+.kp-tags{display:flex;flex-wrap:wrap;gap:0.4rem}
+.kp-tag{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  padding:0.2rem 0.6rem;
+  border-radius:3px;
+  background:var(--violet-dim);
+  color:var(--violet);
+  border:1px solid var(--violet-mid);
+}
+.hero-subtitle{
+  font-family:var(--font-mono);
+  font-size:0.85rem;
+  color:var(--text-muted);
+  letter-spacing:0.08em;
+  margin-bottom:2.5rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.hero-subtitle::before{content:'//';color:var(--violet)}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{
+  padding:0.8rem 2rem;
+  border-radius:6px;
+  font-weight:700;
+  font-size:0.85rem;
+  letter-spacing:0.08em;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  color:var(--bg);
+  transition:all 0.25s;
+  box-shadow:0 0 20px rgba(0,242,254,0.25);
+}
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 32px rgba(0,242,254,0.4);
+}
+.btn-outline{
+  padding:0.8rem 2rem;
+  border-radius:6px;
+  font-weight:700;
+  font-size:0.85rem;
+  letter-spacing:0.08em;
+  border:1px solid var(--border-hover);
+  color:var(--text);
+  transition:all 0.25s;
+}
+.btn-outline:hover{
+  border-color:var(--cyan);
+  color:var(--cyan);
+  background:var(--cyan-dim);
+}
+
+/* Keyword panel positioning helper */
+.hero-keywords-wrap{
+  position:relative;
+  display:flex;flex-wrap:wrap;gap:0.6rem;
+  margin-bottom:2rem;
+}
+
+/* ═══════════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════════ */
+#about{background:var(--bg2)}
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;
+  align-items:start;
+  margin-top:3rem;
+}
+.about-lead{
+  font-size:1.1rem;
+  line-height:1.8;
+  color:var(--text-dim);
+  margin-bottom:2rem;
+}
+.about-lead strong{color:var(--text)}
+.about-quote{
+  border-left:3px solid var(--cyan);
+  padding-left:1.5rem;
+  color:var(--text-dim);
+  font-style:italic;
+  font-size:0.95rem;
+  line-height:1.7;
+}
+.about-quote cite{
+  display:block;margin-top:0.5rem;
+  font-style:normal;
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  color:var(--cyan);
+  letter-spacing:0.1em;
+}
+.edu-card{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.75rem;
+  margin-bottom:1.5rem;
+  position:relative;
+  overflow:hidden;
+}
+.edu-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+}
+.edu-badge{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.15em;
+  color:var(--cyan);
+  margin-bottom:0.5rem;
+}
+.edu-degree{font-size:1.05rem;font-weight:700;margin-bottom:0.3rem}
+.edu-school{font-size:0.85rem;color:var(--text-muted)}
+.edu-year{
+  position:absolute;top:1.75rem;right:1.75rem;
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  color:var(--violet);
+}
+.interests-list{display:flex;flex-direction:column;gap:0.6rem}
+.interest-item{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.75rem 1rem;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  font-size:0.88rem;
+  transition:border-color 0.2s;
+}
+.interest-item:hover{border-color:var(--cyan)}
+.interest-icon{
+  width:28px;height:28px;
+  border-radius:50%;
+  background:var(--cyan-dim);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;
+  color:var(--cyan);
+  flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════════
+   TECHNICAL ARSENAL
+═══════════════════════════════════════════════ */
+#arsenal{background:var(--bg)}
+.arsenal-layout{
+  display:grid;
+  grid-template-columns:1fr 300px;
+  gap:2rem;
+  margin-top:2rem;
+  align-items:start;
+}
+.filter-tabs{
+  display:flex;flex-wrap:wrap;gap:0.5rem;
+  margin-bottom:2rem;
+}
+.filter-tab{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.1em;
+  padding:0.4rem 1rem;
+  border-radius:4px;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  background:transparent;
+  transition:all 0.2s;
+}
+.filter-tab:hover{color:var(--cyan);border-color:var(--cyan-mid)}
+.filter-tab.active{
+  background:var(--cyan-dim);
+  border-color:var(--cyan);
+  color:var(--cyan);
+}
+.skills-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem;
+}
+.skill-card{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.25rem;
+  cursor:pointer;
+  transition:all 0.25s;
+  position:relative;
+  overflow:hidden;
+}
+.skill-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  transform:scaleX(0);
+  transition:transform 0.3s;
+}
+.skill-card:hover::before,.skill-card.selected::before{transform:scaleX(1)}
+.skill-card:hover,.skill-card.selected{
+  border-color:var(--cyan-mid);
+  box-shadow:0 0 20px rgba(0,242,254,0.1);
+  transform:translateY(-2px);
+}
+.skill-name{font-weight:700;font-size:0.95rem;margin-bottom:0.3rem}
+.skill-badge{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.12em;
+  padding:0.15rem 0.5rem;
+  border-radius:3px;
+  margin-bottom:0.75rem;
+  display:inline-block;
+}
+.badge-programming{background:rgba(0,242,254,0.12);color:var(--cyan);border:1px solid rgba(0,242,254,0.25)}
+.badge-frontend{background:rgba(139,92,246,0.12);color:var(--violet);border:1px solid rgba(139,92,246,0.25)}
+.badge-backend{background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.25)}
+.badge-database{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25)}
+.badge-exploring{background:rgba(255,68,102,0.1);color:var(--red);border:1px solid rgba(255,68,102,0.25)}
+.skill-bar-wrap{
+  width:100%;height:4px;
+  background:rgba(255,255,255,0.08);
+  border-radius:2px;
+  overflow:hidden;
+  margin-bottom:0.75rem;
+}
+.skill-bar{
+  height:100%;
+  border-radius:2px;
+  background:linear-gradient(90deg,var(--violet),var(--cyan));
+  box-shadow:0 0 8px var(--cyan-dim);
+  transition:width 1s ease;
+}
+.skill-tags{display:flex;flex-wrap:wrap;gap:0.3rem}
+.skill-tag{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  padding:0.15rem 0.4rem;
+  border-radius:3px;
+  background:rgba(255,255,255,0.05);
+  color:var(--text-muted);
+}
+.arsenal-inspector{
+  position:sticky;top:5rem;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.5rem;
+}
+.inspector-title{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.2em;
+  color:var(--cyan);
+  margin-bottom:1rem;
+  border-bottom:1px solid var(--border);
+  padding-bottom:0.75rem;
+}
+.inspector-empty{
+  color:var(--text-muted);
+  font-size:0.85rem;
+  text-align:center;
+  padding:2rem 0;
+}
+.inspector-name{font-size:1.3rem;font-weight:800;margin-bottom:0.5rem}
+.inspector-pct{
+  font-family:var(--font-mono);
+  font-size:2rem;
+  font-weight:900;
+  color:var(--cyan);
+  margin-bottom:1rem;
+}
+.inspector-bar-wrap{
+  width:100%;height:6px;
+  background:rgba(255,255,255,0.08);
+  border-radius:3px;overflow:hidden;
+  margin-bottom:1.25rem;
+}
+.inspector-bar{
+  height:100%;
+  background:linear-gradient(90deg,var(--violet),var(--cyan));
+  border-radius:3px;
+  box-shadow:0 0 12px var(--cyan-mid);
+  transition:width 0.8s ease;
+}
+.inspector-desc{
+  font-size:0.85rem;color:var(--text-dim);
+  line-height:1.65;margin-bottom:1rem;
+}
+.inspector-tags-label{
+  font-family:var(--font-mono);
+  font-size:0.65rem;color:var(--text-muted);
+  letter-spacing:0.12em;margin-bottom:0.5rem;
+}
+.inspector-tags{display:flex;flex-wrap:wrap;gap:0.4rem}
+.inspector-tag{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  padding:0.2rem 0.5rem;
+  border-radius:3px;
+  background:var(--cyan-dim);
+  color:var(--cyan);
+  border:1px solid rgba(0,242,254,0.2);
+}
+
+/* ═══════════════════════════════════════════════
+   PROJECTS
+═══════════════════════════════════════════════ */
+#projects{background:var(--bg2)}
+.projects-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1.5rem;
+  margin-top:2rem;
+}
+.project-card{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.75rem;
+  position:relative;
+  overflow:hidden;
+  transition:all 0.3s;
+  display:flex;flex-direction:column;
+  gap:0;
+}
+.project-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+}
+.project-card:hover{
+  border-color:var(--cyan-mid);
+  box-shadow:0 0 32px rgba(0,242,254,0.1);
+  transform:translateY(-3px);
+}
+.project-codename{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.18em;
+  color:var(--text-muted);
+  margin-bottom:0.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.project-status{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.1em;
+  padding:0.15rem 0.6rem;
+  border-radius:3px;
+  background:rgba(0,255,136,0.1);
+  color:var(--green);
+  border:1px solid rgba(0,255,136,0.25);
+  display:flex;align-items:center;gap:0.4rem;
+}
+.project-status::before{
+  content:'';
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green);
+  animation:blink 1.5s step-end infinite;
+}
+.project-title{
+  font-size:1.2rem;font-weight:800;
+  margin-bottom:0.3rem;
+  line-height:1.2;
+}
+.project-tagline{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  color:var(--cyan);
+  margin-bottom:0.75rem;
+  letter-spacing:0.04em;
+}
+.project-desc{
+  font-size:0.85rem;
+  color:var(--text-dim);
+  line-height:1.65;
+  margin-bottom:1rem;
+}
+.project-milestone{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.08em;
+  padding:0.4rem 0.75rem;
+  border-radius:4px;
+  background:linear-gradient(135deg,rgba(0,242,254,0.08),rgba(139,92,246,0.08));
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.project-milestone::before{content:'⚑';color:var(--cyan)}
+.metrics-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0.5rem;
+  margin-bottom:1rem;
+}
+.metric-box{
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:0.6rem 0.5rem;
+  text-align:center;
+}
+.metric-label{
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  letter-spacing:0.08em;
+  color:var(--text-muted);
+  margin-bottom:0.2rem;
+  text-transform:uppercase;
+}
+.metric-value{
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+  font-weight:700;
+  color:var(--cyan);
+}
+.project-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.25rem;flex:1}
+.project-tag{
+  font-family:var(--font-mono);
+  font-size:0.62rem;
+  padding:0.2rem 0.5rem;
+  border-radius:3px;
+  background:rgba(255,255,255,0.04);
+  color:var(--text-muted);
+  border:1px solid var(--border);
+}
+.project-footer{
+  display:flex;align-items:center;gap:0.75rem;
+  border-top:1px solid var(--border);
+  padding-top:1rem;
+  margin-top:auto;
+}
+.btn-inspect{
+  flex:1;
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.1em;
+  padding:0.6rem 1rem;
+  border-radius:5px;
+  border:1px solid var(--cyan-mid);
+  color:var(--cyan);
+  background:var(--cyan-dim);
+  transition:all 0.2s;
+}
+.btn-inspect:hover{
+  background:var(--cyan);
+  color:var(--bg);
+  box-shadow:0 0 16px var(--cyan-mid);
+}
+.icon-btn{
+  width:36px;height:36px;
+  border-radius:5px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-muted);
+  font-size:1rem;
+  transition:all 0.2s;
+  flex-shrink:0;
+}
+.icon-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ═══════════════════════════════════════════════
+   PROJECT MODAL
+═══════════════════════════════════════════════ */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:800;
+  background:rgba(3,4,7,0.9);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+  opacity:0;visibility:hidden;
+  transition:all 0.3s;
+}
+.modal-backdrop.open{opacity:1;visibility:visible}
+.modal-box{
+  background:var(--bg3);
+  border:1px solid var(--border-hover);
+  border-radius:var(--radius-lg);
+  width:min(760px,100%);
+  max-height:88vh;
+  overflow-y:auto;
+  position:relative;
+  animation:fadeUp 0.3s ease;
+}
+.modal-box::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+}
+.modal-header{
+  padding:1.75rem 2rem 1rem;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:1rem;
+  border-bottom:1px solid var(--border);
+}
+.modal-close{
+  width:32px;height:32px;
+  border-radius:4px;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  flex-shrink:0;
+  transition:all 0.2s;
+}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:1.5rem 2rem 2rem}
+.modal-section{margin-bottom:1.5rem}
+.modal-section-title{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.18em;
+  color:var(--cyan);
+  margin-bottom:0.75rem;
+  text-transform:uppercase;
+}
+.modal-desc{font-size:0.9rem;color:var(--text-dim);line-height:1.7}
+.modal-highlights{display:flex;flex-direction:column;gap:0.5rem}
+.modal-highlight{
+  display:flex;align-items:flex-start;gap:0.6rem;
+  font-size:0.85rem;color:var(--text-dim);
+}
+.modal-highlight::before{
+  content:'▸';color:var(--cyan);flex-shrink:0;margin-top:1px;
+}
+.modal-tech-grid{display:flex;flex-wrap:wrap;gap:0.5rem}
+.modal-tech-tag{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  padding:0.3rem 0.7rem;
+  border-radius:4px;
+  background:var(--cyan-dim);
+  color:var(--cyan);
+  border:1px solid rgba(0,242,254,0.2);
+}
+
+/* ═══════════════════════════════════════════════
+   JOURNEY / TIMELINE
+═══════════════════════════════════════════════ */
+#journey{background:var(--bg)}
+.timeline{
+  position:relative;
+  margin-top:2.5rem;
+  padding-left:2rem;
+}
+.timeline::before{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;
+  width:2px;
+  background:linear-gradient(180deg,var(--cyan),var(--violet),transparent);
+}
+.timeline-item{
+  position:relative;
+  padding:0 0 2.5rem 2rem;
+  transition:opacity 0.3s;
+}
+.timeline-item.hidden{display:none}
+.timeline-dot{
+  position:absolute;
+  left:-2.4rem;top:0;
+  width:14px;height:14px;
+  border-radius:50%;
+  border:2px solid var(--cyan);
+  background:var(--bg);
+  box-shadow:0 0 12px var(--cyan);
+  transition:box-shadow 0.3s;
+}
+.timeline-item:hover .timeline-dot{box-shadow:0 0 20px var(--cyan),0 0 40px var(--cyan-mid)}
+.timeline-meta{
+  display:flex;align-items:center;gap:0.6rem;
+  margin-bottom:0.5rem;
+  flex-wrap:wrap;
+}
+.timeline-period{
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.1em;
+  color:var(--text-muted);
+}
+.timeline-cat{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.12em;
+  padding:0.15rem 0.5rem;
+  border-radius:3px;
+}
+.cat-education{background:rgba(0,242,254,0.1);color:var(--cyan);border:1px solid rgba(0,242,254,0.2)}
+.cat-competition{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+.cat-initiative{background:rgba(139,92,246,0.1);color:var(--violet);border:1px solid rgba(139,92,246,0.2)}
+.cat-certification{background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.2)}
+.cat-research{background:rgba(255,68,102,0.1);color:var(--red);border:1px solid rgba(255,68,102,0.2)}
+.timeline-title{font-size:1.1rem;font-weight:700;margin-bottom:0.2rem}
+.timeline-org{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  color:var(--cyan);
+  margin-bottom:0.6rem;
+}
+.timeline-desc{font-size:0.85rem;color:var(--text-dim);line-height:1.65;margin-bottom:0.75rem}
+.timeline-bullets{display:flex;flex-direction:column;gap:0.35rem}
+.timeline-bullet{
+  display:flex;align-items:flex-start;gap:0.5rem;
+  font-size:0.82rem;color:var(--text-dim);
+}
+.timeline-bullet::before{content:'▸';color:var(--violet);flex-shrink:0}
+
+/* ═══════════════════════════════════════════════
+   RESUME
+═══════════════════════════════════════════════ */
+#resume{background:var(--bg2)}
+.resume-layout{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:2rem;
+  margin-top:2rem;
+  align-items:start;
+}
+.resume-sheet{
+  background:#0a0e17;
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+}
+.resume-header{
+  background:linear-gradient(135deg,rgba(0,242,254,0.12),rgba(139,92,246,0.12));
+  border-bottom:1px solid var(--border);
+  padding:2rem;
+}
+.resume-name{
+  font-size:2rem;font-weight:900;
+  letter-spacing:-0.02em;
+  margin-bottom:0.25rem;
+}
+.resume-name .accent{color:var(--cyan)}
+.resume-role{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  letter-spacing:0.18em;
+  color:var(--text-muted);
+}
+.resume-body{padding:2rem}
+.resume-section{margin-bottom:1.5rem}
+.resume-section-label{
+  font-family:var(--font-mono);
+  font-size:0.62rem;
+  letter-spacing:0.2em;
+  color:var(--cyan);
+  text-transform:uppercase;
+  margin-bottom:0.75rem;
+  border-bottom:1px solid var(--border);
+  padding-bottom:0.4rem;
+}
+.competencies-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:0.75rem;
+}
+.competency-box{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:0.75rem;
+}
+.competency-title{
+  font-size:0.8rem;font-weight:700;
+  margin-bottom:0.25rem;
+}
+.competency-items{
+  font-size:0.75rem;color:var(--text-muted);
+}
+.resume-project{
+  padding:0.75rem 0;
+  border-bottom:1px solid var(--border);
+}
+.resume-project:last-child{border-bottom:none}
+.resume-proj-name{font-weight:700;font-size:0.9rem;margin-bottom:0.2rem}
+.resume-proj-desc{font-size:0.8rem;color:var(--text-dim)}
+.resume-edu-item{font-size:0.85rem;color:var(--text-dim)}
+.resume-edu-item strong{color:var(--text);display:block;margin-bottom:0.1rem}
+.resume-actions{
+  display:flex;justify-content:flex-end;
+  margin-bottom:1rem;
+}
+.btn-print{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.1em;
+  padding:0.5rem 1.25rem;
+  border-radius:5px;
+  border:1px solid var(--border-hover);
+  color:var(--text);
+  transition:all 0.2s;
+}
+.btn-print:hover{border-color:var(--cyan);color:var(--cyan)}
+.contact-card{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:1.75rem;
+  position:sticky;top:5rem;
+}
+.contact-card-title{
+  font-size:1.1rem;font-weight:700;
+  margin-bottom:0.25rem;
+}
+.contact-card-sub{
+  font-size:0.8rem;color:var(--text-muted);
+  margin-bottom:1.5rem;
+}
+.contact-link{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.75rem;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  margin-bottom:0.75rem;
+  font-size:0.85rem;
+  transition:all 0.2s;
+}
+.contact-link:hover{border-color:var(--cyan);color:var(--cyan)}
+.contact-link-icon{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:var(--cyan-dim);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;flex-shrink:0;
+}
+.contact-link-label{font-size:0.75rem;color:var(--text-muted)}
+.contact-link-val{font-size:0.85rem;font-weight:600}
+.btn-copy{
+  margin-left:auto;
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.08em;
+  padding:0.2rem 0.5rem;
+  border-radius:3px;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  transition:all 0.2s;
+}
+.btn-copy:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-email-cta{
+  display:block;
+  width:100%;
+  margin-top:1.5rem;
+  padding:1rem;
+  border-radius:8px;
+  font-weight:700;
+  font-size:0.88rem;
+  letter-spacing:0.08em;
+  text-align:center;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  color:var(--bg);
+  transition:all 0.25s;
+  background-size:200% 200%;
+  animation:gradientShift 4s ease infinite;
+}
+.btn-email-cta:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 32px rgba(0,242,254,0.4);
+}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+footer{
+  background:var(--bg);
+  border-top:1px solid var(--border);
+  padding:3rem 2rem;
+}
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1.5rem;
+}
+.footer-logo{
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:1rem;
+  letter-spacing:0.08em;
+  display:flex;flex-direction:column;gap:0.2rem;
+}
+.footer-logo span{
+  font-size:0.65rem;
+  font-weight:400;
+  letter-spacing:0.2em;
+  color:var(--text-muted);
+}
+.footer-status{
+  display:flex;align-items:center;gap:0.5rem;
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.1em;
+  color:var(--green);
+}
+.footer-status::before{
+  content:'';
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+  animation:blink 2s step-end infinite;
+}
+.footer-copy{
+  font-size:0.8rem;color:var(--text-muted);
+  font-family:var(--font-mono);
+}
+.btn-top{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.12em;
+  padding:0.5rem 1rem;
+  border-radius:5px;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  transition:all 0.2s;
+}
+.btn-top:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ═══════════════════════════════════════════════
+   TERMINAL MODAL
+═══════════════════════════════════════════════ */
+#terminal-modal{
+  position:fixed;inset:0;z-index:900;
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+  background:rgba(3,4,7,0.92);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  opacity:0;visibility:hidden;
+  transition:all 0.3s;
+}
+#terminal-modal.open{opacity:1;visibility:visible}
+.terminal-box{
+  width:min(720px,100%);
+  height:min(480px,80vh);
+  background:#050810;
+  border:1px solid var(--cyan-mid);
+  border-radius:var(--radius-lg);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 0 60px rgba(0,242,254,0.15);
+  animation:fadeUp 0.3s ease;
+}
+.terminal-titlebar{
+  display:flex;align-items:center;gap:0.5rem;
+  padding:0.6rem 1rem;
+  background:rgba(0,242,254,0.05);
+  border-bottom:1px solid var(--border);
+}
+.term-dot{width:11px;height:11px;border-radius:50%}
+.term-dot.red{background:#ff5f57}
+.term-dot.yellow{background:#febc2e}
+.term-dot.green{background:#28c840}
+.terminal-title{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.12em;
+  color:var(--text-muted);
+  margin-left:auto;
+  margin-right:auto;
+}
+.term-close-btn{
+  margin-left:auto;
+  color:var(--text-muted);
+  font-size:1rem;
+  transition:color 0.2s;
+}
+.term-close-btn:hover{color:var(--red)}
+.terminal-output{
+  flex:1;
+  overflow-y:auto;
+  padding:1rem 1.25rem;
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+  line-height:1.7;
+}
+.terminal-output::-webkit-scrollbar{width:3px}
+.terminal-output::-webkit-scrollbar-thumb{background:var(--cyan-dim)}
+.term-line{margin:0}
+.term-prompt{color:var(--cyan)}
+.term-cmd{color:var(--text)}
+.term-out{color:var(--text-dim)}
+.term-out .hl{color:var(--cyan)}
+.term-out .vl{color:var(--violet)}
+.term-out .gl{color:var(--green)}
+.term-out .yl{color:#fbbf24}
+.term-err{color:var(--red)}
+.terminal-input-row{
+  display:flex;align-items:center;gap:0.5rem;
+  padding:0.6rem 1.25rem;
+  border-top:1px solid var(--border);
+  background:rgba(0,0,0,0.3);
+}
+.term-prompt-label{
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+  color:var(--cyan);
+  white-space:nowrap;
+}
+#term-input{
+  flex:1;
+  background:none;
+  border:none;
+  outline:none;
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+  color:var(--text);
+  caret-color:var(--cyan);
+}
+
+/* ═══════════════════════════════════════════════
+   PRINT STYLES
+═══════════════════════════════════════════════ */
+@media print{
+  #boot-overlay,#navbar,#command,#about,#arsenal,#projects,#journey,footer,
+  #terminal-modal,.modal-backdrop,
+  .contact-card,.resume-actions{display:none!important}
+  #resume{padding:0!important;background:white!important}
+  .resume-layout{grid-template-columns:1fr!important;display:block!important}
+  .resume-sheet{border:none!important;background:white!important;color:black!important}
+  .resume-header{background:none!important;border-bottom:2px solid #000!important}
+  .resume-name,.resume-role,.resume-section-label,.resume-proj-name{color:black!important}
+  .resume-proj-desc,.resume-edu-item,.competency-items{color:#333!important}
+  .resume-body{padding:1rem!important}
+}
+
+/* ═══════════════════════════════════════════════
+   SCROLL REVEAL UTILITY
+═══════════════════════════════════════════════ */
+.reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.reveal.visible{opacity:1;transform:none}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media(max-width:1024px){
+  .arsenal-layout{grid-template-columns:1fr}
+  .arsenal-inspector{position:relative;top:0}
+  .skills-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  section{padding:5rem 1.25rem}
+  .nav-links,.nav-clock{display:none}
+  .hamburger{display:flex}
+  .nav-mobile{
+    display:flex;flex-direction:column;
+    position:fixed;top:64px;left:0;right:0;
+    background:var(--glass);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    padding:1rem 1.5rem;
+    gap:0.5rem;
+    border-bottom:1px solid var(--border);
+    transform:translateY(-110%);
+    transition:transform 0.3s;
+  }
+  .nav-mobile.open{transform:none}
+  .nav-mobile a{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    color:var(--text-dim);
+    padding:0.5rem 0;
+    border-bottom:1px solid var(--border);
+  }
+  .about-grid{grid-template-columns:1fr}
+  .skills-grid{grid-template-columns:1fr}
+  .projects-grid{grid-template-columns:1fr}
+  .resume-layout{grid-template-columns:1fr}
+  .competencies-grid{grid-template-columns:1fr}
+  .metrics-grid{grid-template-columns:repeat(2,1fr)}
+  .keyword-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(340px,90vw)}
+  .hero-name{font-size:clamp(3rem,12vw,5rem)}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     BOOT SEQUENCE
+═══════════════════════════════════════════════ -->
+<div id="boot-overlay">
+  <div class="boot-inner">
+    <div class="boot-logo">MDE // SYSTEM BOOT</div>
+    <div class="boot-lines" id="boot-lines"></div>
+    <div class="boot-progress-wrap">
+      <div class="boot-progress-bar"></div>
+    </div>
+    <div class="boot-skip">[ CLICK ANYWHERE OR WAIT ]</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <div class="dot"></div>
+    MANUJ // MDE
+  </div>
+  <div class="nav-links">
+    <a href="#command">01.COMMAND</a>
+    <a href="#about">02.PROFILE</a>
+    <a href="#arsenal">03.ARSENAL</a>
+    <a href="#projects">04.PROJECTS</a>
+    <a href="#journey">05.JOURNEY</a>
+    <a href="#resume">06.RESUME</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-clock" id="nav-clock">00:00:00</div>
+    <button class="btn-terminal" id="btn-open-terminal">⌨ TERMINAL</button>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="nav-mobile" id="nav-mobile">
+  <a href="#command" onclick="closeMobileNav()">01.COMMAND</a>
+  <a href="#about" onclick="closeMobileNav()">02.PROFILE</a>
+  <a href="#arsenal" onclick="closeMobileNav()">03.ARSENAL</a>
+  <a href="#projects" onclick="closeMobileNav()">04.PROJECTS</a>
+  <a href="#journey" onclick="closeMobileNav()">05.JOURNEY</a>
+  <a href="#resume" onclick="closeMobileNav()">06.RESUME</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     HOME — COMMAND CENTER
+═══════════════════════════════════════════════ -->
+<section id="command">
+  <canvas id="particles-canvas"></canvas>
+  <div class="hero-bg-grid"></div>
+  <div class="container hero-content">
+    <div class="hero-pre">DEVELOPER // AI ENGINEER // SECURITY RESEARCHER</div>
+    <h1 class="hero-name">MANUJ <span class="glow">U.</span></h1>
+    <div style="position:relative">
+      <div class="hero-keywords-wrap" id="hero-keywords">
+        <button class="hero-keyword" data-kw="dev">[DEVELOPER]</button>
+        <button class="hero-keyword" data-kw="ai">[AI ENGINEERING]</button>
+        <button class="hero-keyword" data-kw="cyber">[CYBERSECURITY]</button>
+        <button class="hero-keyword" data-kw="pqc">[PQC]</button>
+      </div>
+      <div class="keyword-panel" id="kw-panel">
+        <div class="kp-title" id="kp-title"></div>
+        <div class="kp-heading" id="kp-heading"></div>
+        <div class="kp-desc" id="kp-desc"></div>
+        <div class="kp-tags" id="kp-tags"></div>
+      </div>
+    </div>
+    <div class="hero-subtitle">Computer Science and Business Systems</div>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">EXPLORE PROJECTS</a>
+      <a href="#resume" class="btn-outline">VIEW RESUME</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT — PERSONAL PROFILE
+═══════════════════════════════════════════════ -->
+<section id="about">
+  <div class="container">
+    <div class="section-label">02 // PERSONAL PROFILE</div>
+    <h2 class="section-heading reveal">ENGINEERING<br><span class="accent">MANIFESTO</span></h2>
+    <div class="about-grid">
+      <div class="reveal">
+        <p class="about-lead">
+          I am <strong>Manuj U.</strong>, a Computer Science and Business Systems undergraduate
+          engineering at the intersection of <strong>autonomous AI systems</strong>,
+          <strong>post-quantum cryptography</strong>, and <strong>full-stack development</strong>.
+          My work converges cutting-edge machine intelligence with mathematically-grounded
+          security primitives — building systems that are not just functional, but
+          <strong>resilient against tomorrow's threats</strong>.
+        </p>
+        <blockquote class="about-quote">
+          "The next decade of computing will be defined not by who writes the most code,
+          but by who builds systems that think, secure, and scale autonomously. I intend
+          to be at that frontier."
+          <cite>— MANUJ U. // B.Tech CSBS</cite>
+        </blockquote>
+      </div>
+      <div class="reveal">
+        <div class="edu-card">
+          <div class="edu-badge">// EDUCATION</div>
+          <div class="edu-degree">B.Tech — Computer Science &amp; Business Systems</div>
+          <div class="edu-school">Affiliated Engineering Institution · India</div>
+          <div class="edu-year">2024–Present</div>
+        </div>
+        <div style="margin-bottom:0.75rem;font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.2em;color:var(--cyan)">// TECHNICAL INTERESTS</div>
+        <div class="interests-list">
+          <div class="interest-item">
+            <div class="interest-icon">◈</div>
+            Autonomous AI &amp; Agentic Robotics
+          </div>
+          <div class="interest-item">
+            <div class="interest-icon">◈</div>
+            Post-Quantum Cryptography (NIST PQC)
+          </div>
+          <div class="interest-item">
+            <div class="interest-icon">◈</div>
+            Full-Stack Engineering &amp; System Design
+          </div>
+          <div class="interest-item">
+            <div class="interest-icon">◈</div>
+            Cybersecurity &amp; Network Defense Systems
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     TECHNICAL ARSENAL
+═══════════════════════════════════════════════ -->
+<section id="arsenal">
+  <div class="container">
+    <div class="section-label">03 // TECHNICAL ARSENAL</div>
+    <h2 class="section-heading reveal">TECHNICAL<br><span class="accent">ARSENAL</span></h2>
+    <div class="arsenal-layout">
+      <div>
+        <div class="filter-tabs" id="arsenal-filters">
+          <button class="filter-tab active" data-filter="all">ALL</button>
+          <button class="filter-tab" data-filter="programming">PROGRAMMING</button>
+          <button class="filter-tab" data-filter="frontend">FRONTEND</button>
+          <button class="filter-tab" data-filter="backend">BACKEND</button>
+          <button class="filter-tab" data-filter="database">DATABASE</button>
+          <button class="filter-tab" data-filter="exploring">EXPLORING</button>
+        </div>
+        <div class="skills-grid" id="skills-grid"></div>
+      </div>
+      <div class="arsenal-inspector" id="arsenal-inspector">
+        <div class="inspector-title">// ARSENAL INSPECTOR</div>
+        <div class="inspector-empty" id="inspector-empty">Select a skill card to inspect details</div>
+        <div id="inspector-detail" style="display:none">
+          <div class="inspector-name" id="insp-name"></div>
+          <div class="inspector-pct" id="insp-pct"></div>
+          <div class="inspector-bar-wrap">
+            <div class="inspector-bar" id="insp-bar" style="width:0%"></div>
+          </div>
+          <div class="inspector-desc" id="insp-desc"></div>
+          <div class="inspector-tags-label">// ASSOCIATED TECHNOLOGIES</div>
+          <div class="inspector-tags" id="insp-tags"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PROJECTS
+═══════════════════════════════════════════════ -->
+<section id="projects">
+  <div class="container">
+    <div class="section-label">04 // SYSTEM PRODUCTION ARTIFACTS</div>
+    <h2 class="section-heading reveal">FEATURED<br><span class="accent">PROJECTS</span></h2>
+    <div class="filter-tabs" id="project-filters">
+      <button class="filter-tab active" data-filter="all">ALL</button>
+      <button class="filter-tab" data-filter="ai">AUTONOMOUS / AI</button>
+      <button class="filter-tab" data-filter="pqc">PQC &amp; SECURITY</button>
+      <button class="filter-tab" data-filter="fullstack">FULL-STACK</button>
+    </div>
+    <div class="projects-grid" id="projects-grid"></div>
+  </div>
+</section>
+
+<!-- Project Modal -->
+<div class="modal-backdrop" id="project-modal">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-header">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:0.3rem" id="m-codename"></div>
+        <div style="font-size:1.4rem;font-weight:800" id="m-title"></div>
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--cyan);margin-top:0.2rem" id="m-tagline"></div>
+      </div>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">// SYSTEM OVERVIEW</div>
+        <div class="modal-desc" id="m-desc"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">// KEY HIGHLIGHTS</div>
+        <div class="modal-highlights" id="m-highlights"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">// TECHNOLOGY STACK</div>
+        <div class="modal-tech-grid" id="m-tech"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     JOURNEY — TIMELINE
+═══════════════════════════════════════════════ -->
+<section id="journey">
+  <div class="container">
+    <div class="section-label">05 // TRAJECTORY &amp; RECOGNITION</div>
+    <h2 class="section-heading reveal">JOURNEY &amp;<br><span class="accent">MILESTONES</span></h2>
+    <div class="filter-tabs" id="journey-filters" style="margin-bottom:2rem">
+      <button class="filter-tab active" data-filter="all">ALL</button>
+      <button class="filter-tab" data-filter="education">EDUCATION</button>
+      <button class="filter-tab" data-filter="competition">SIH / MSME</button>
+      <button class="filter-tab" data-filter="initiative">PROJECT GENESIS</button>
+      <button class="filter-tab" data-filter="certification">CREDENTIALS</button>
+      <button class="filter-tab" data-filter="research">RESEARCH</button>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     RESUME
+═══════════════════════════════════════════════ -->
+<section id="resume">
+  <div class="container">
+    <div class="section-label">06 // PROFESSIONAL PROFILE</div>
+    <h2 class="section-heading reveal">PROFESSIONAL<br><span class="accent">PROFILE</span></h2>
+    <div class="resume-actions">
+      <button class="btn-print" onclick="window.print()">⬇ DOWNLOAD / PRINT PDF</button>
+    </div>
+    <div class="resume-layout">
+      <div class="resume-sheet">
+        <div class="resume-header">
+          <div class="resume-name">MANUJ <span class="accent">U.</span></div>
+          <div class="resume-role">// B.TECH CSBS · DEVELOPER · AI ENGINEER · SECURITY RESEARCHER</div>
+        </div>
+        <div class="resume-body">
+          <div class="resume-section">
+            <div class="resume-section-label">// CORE COMPETENCIES</div>
+            <div class="competencies-grid">
+              <div class="competency-box">
+                <div class="competency-title">Systems Programming</div>
+                <div class="competency-items">C, C++, Python, Java · OS Concepts · Algorithms</div>
+              </div>
+              <div class="competency-box">
+                <div class="competency-title">AI &amp; Machine Learning</div>
+                <div class="competency-items">PyTorch · OpenCV · Neural Nets · Agentic Systems</div>
+              </div>
+              <div class="competency-box">
+                <div class="competency-title">Web &amp; Full-Stack</div>
+                <div class="competency-items">React · Node.js · Express · MongoDB · SQL</div>
+              </div>
+              <div class="competency-box">
+                <div class="competency-title">Security &amp; PQC</div>
+                <div class="competency-items">CRYSTALS-Kyber · NIST ML-KEM · Network IDS · Crypto</div>
+              </div>
+            </div>
+          </div>
+          <div class="resume-section">
+            <div class="resume-section-label">// FEATURED PROJECTS</div>
+            <div class="resume-project">
+              <div class="resume-proj-name">NEUROBOTS — Autonomous Agentic Robotics</div>
+              <div class="resume-proj-desc">SIH &amp; MSME Internal Selection Finalist. Multi-agent robotic system with real-time computer vision, PyTorch inference pipeline &amp; C++ embedded control.</div>
+            </div>
+            <div class="resume-project">
+              <div class="resume-proj-name">KRYPTCOM — Post-Quantum Cryptographic Secure Enclave</div>
+              <div class="resume-proj-desc">Implements NIST ML-KEM (CRYSTALS-Kyber) for quantum-resistant key encapsulation and end-to-end encrypted communication channels.</div>
+            </div>
+            <div class="resume-project">
+              <div class="resume-proj-name">CYBERSENTRY — Real-Time Network IDS</div>
+              <div class="resume-proj-desc">1.2 Gbps throughput network intrusion detection system with behavioral anomaly engine and zero-day heuristics in Python &amp; C++.</div>
+            </div>
+            <div class="resume-project">
+              <div class="resume-proj-name">NEXUS CSBS — Enterprise Transaction Mesh</div>
+              <div class="resume-proj-desc">Full-stack enterprise platform with React frontend, Node.js/Express API, dual-database architecture (MongoDB + SQL).</div>
+            </div>
+          </div>
+          <div class="resume-section">
+            <div class="resume-section-label">// EDUCATION</div>
+            <div class="resume-edu-item">
+              <strong>B.Tech — Computer Science &amp; Business Systems</strong>
+              Affiliated Engineering Institution · India · 2024 – Present
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-title">GET IN TOUCH</div>
+        <div class="contact-card-sub">Open to collaborations, research partnerships, and opportunities.</div>
+        <div class="contact-link">
+          <div class="contact-link-icon">✉</div>
+          <div>
+            <div class="contact-link-label">EMAIL</div>
+            <div class="contact-link-val">manuj@example.com</div>
+          </div>
+          <button class="btn-copy" onclick="copyEmail()">COPY</button>
+        </div>
+        <a class="contact-link" href="https://github.com/" target="_blank">
+          <div class="contact-link-icon">⌥</div>
+          <div>
+            <div class="contact-link-label">GITHUB</div>
+            <div class="contact-link-val">github.com/manuju</div>
+          </div>
+        </a>
+        <a class="contact-link" href="https://linkedin.com/" target="_blank">
+          <div class="contact-link-icon">◈</div>
+          <div>
+            <div class="contact-link-label">LINKEDIN</div>
+            <div class="contact-link-val">linkedin.com/in/manuju</div>
+          </div>
+        </a>
+        <a class="btn-email-cta" href="mailto:manuj@example.com">⚡ INITIATE EMAIL CONTACT</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      MDE
+      <span>MANUJ DIGITAL ENVIRONMENT</span>
+    </div>
+    <div class="footer-status">ALL SYSTEMS SECURE &amp; OPTIMIZED</div>
+    <div class="footer-copy">© 2026 MANUJ U. // B.Tech CSBS</div>
+    <button class="btn-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ BACK TO TOP</button>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     TERMINAL MODAL
+═══════════════════════════════════════════════ -->
+<div id="terminal-modal">
+  <div class="terminal-box">
+    <div class="terminal-titlebar">
+      <div class="term-dot red"></div>
+      <div class="term-dot yellow"></div>
+      <div class="term-dot green"></div>
+      <div class="terminal-title">MDE TERMINAL // v2.4.0</div>
+      <button class="term-close-btn" id="term-close-btn">✕</button>
+    </div>
+    <div class="terminal-output" id="term-output"></div>
+    <div class="terminal-input-row">
+      <div class="term-prompt-label">manuj@mde:~$</div>
+      <input type="text" id="term-input" autocomplete="off" spellcheck="false" placeholder="type 'help' for commands...">
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────── */
+const KEYWORD_DATA = {
+  dev: {
+    title:'// DOMAIN: SOFTWARE ENGINEERING',
+    heading:'Full-Stack Developer',
+    desc:'Building scalable, performant applications from low-level C/C++ systems to modern React frontends and Node.js APIs. Architecture-first thinking with an eye for clean, maintainable code.',
+    tags:['React','Node.js','C/C++','Python','MongoDB','SQL','Express']
+  },
+  ai: {
+    title:'// DOMAIN: ARTIFICIAL INTELLIGENCE',
+    heading:'AI & Agentic Systems Engineer',
+    desc:'Designing and deploying multi-agent autonomous systems, computer vision pipelines, and deep learning architectures. Specializing in agentic robotics and real-time inference with PyTorch.',
+    tags:['PyTorch','OpenCV','Neural Networks','Agentic AI','Computer Vision','Robotics']
+  },
+  cyber: {
+    title:'// DOMAIN: CYBERSECURITY',
+    heading:'Network Security & IDS Researcher',
+    desc:'Architecting real-time intrusion detection systems, behavioral anomaly engines, and network security tooling capable of operating at 1.2+ Gbps throughput with zero-day heuristics.',
+    tags:['Network IDS','Anomaly Detection','Python','C++','Packet Analysis','Zero-Day']
+  },
+  pqc: {
+    title:'// DOMAIN: POST-QUANTUM CRYPTOGRAPHY',
+    heading:'PQC & Quantum-Safe Security',
+    desc:'Implementing NIST-standardized post-quantum cryptographic primitives including CRYSTALS-Kyber (ML-KEM) for quantum-resistant key encapsulation in production-grade secure enclaves.',
+    tags:['CRYSTALS-Kyber','NIST ML-KEM','Lattice Crypto','Secure Enclave','Zero-Trust']
+  }
+};
+
+const SKILLS_DATA = [
+  {name:'C',cat:'programming',pct:92,tags:['Systems','Embedded','Low-Level'],desc:'Deep expertise in C for systems programming, embedded control, OS-level operations, and performance-critical code.'},
+  {name:'C++',cat:'programming',pct:94,tags:['OOP','Performance','Robotics'],desc:'Advanced C++ for high-performance computing, robotic control systems, and real-time network packet processing.'},
+  {name:'Java',cat:'programming',pct:88,tags:['OOP','Data Structures','Algorithms'],desc:'Solid Java proficiency for data structures, algorithms, and object-oriented system design.'},
+  {name:'Python',cat:'programming',pct:95,tags:['AI/ML','Scripting','Automation'],desc:'Primary language for AI/ML development, scripting, network tools, and rapid prototyping of complex systems.'},
+  {name:'HTML5',cat:'frontend',pct:96,tags:['Semantic','Accessibility','Canvas'],desc:'Mastery of semantic HTML5 including Canvas API, custom elements, and accessibility best practices.'},
+  {name:'CSS3',cat:'frontend',pct:95,tags:['Animations','Grid','Flexbox'],desc:'Expert-level CSS3 including complex animations, responsive layouts with Grid/Flexbox, and design systems.'},
+  {name:'React',cat:'frontend',pct:94,tags:['Hooks','SPA','Component Design'],desc:'Modern React development with hooks, state management patterns, and scalable component architecture.'},
+  {name:'Node.js',cat:'backend',pct:92,tags:['REST APIs','Async','Scalability'],desc:'Node.js for building high-performance REST APIs, real-time WebSocket servers, and microservice architectures.'},
+  {name:'Express',cat:'backend',pct:90,tags:['Middleware','Routing','Auth'],desc:'Express framework for rapid API development with custom middleware chains, authentication, and route handling.'},
+  {name:'MongoDB',cat:'database',pct:90,tags:['NoSQL','Aggregation','Schema Design'],desc:'MongoDB schema design, complex aggregation pipelines, indexing strategies, and performance optimization.'},
+  {name:'SQL',cat:'database',pct:89,tags:['Relational','Queries','Optimization'],desc:'Relational database design, complex joins, query optimization, and normalized schema architecture.'},
+  {name:'AI & Neural Systems',cat:'exploring',pct:93,tags:['PyTorch','Agents','Transformers'],desc:'Actively researching agentic AI architectures, transformer models, and multi-agent collaboration frameworks.'},
+  {name:'Cybersecurity',cat:'exploring',pct:91,tags:['IDS','Penetration','Defense'],desc:'Deep exploration of network security, intrusion detection systems, and defensive security engineering.'},
+  {name:'PQC',cat:'exploring',pct:90,tags:['Kyber','Lattice','NIST PQC'],desc:'Research-grade implementation of post-quantum cryptographic primitives and quantum-resistant protocol design.'}
+];
+
+const PROJECTS_DATA = [
+  {
+    id:'neurobots',
+    codename:'PROJ-NEUROBOTS // V2.4',
+    status:'ACTIVE_DEPLOYMENT',
+    title:'NEUROBOTS',
+    tagline:'Autonomous Agentic Robotics Platform',
+    desc:'A multi-agent autonomous robotic system integrating real-time computer vision, PyTorch-based decision inference, and C++ embedded motor control. Architectured for dynamic environment traversal with minimal human intervention.',
+    milestone:'SIH & MSME INTERNAL SELECTION FINALIST',
+    metrics:[
+      {label:'AGENTS',value:'7+'},
+      {label:'LATENCY',value:'<40ms'},
+      {label:'ACCURACY',value:'96.4%'},
+      {label:'STATUS',value:'ACTIVE'}
+    ],
+    tags:['Python','OpenCV','PyTorch','C++','Robotics','Multi-Agent','Computer Vision'],
+    filter:'ai',
+    highlights:[
+      'Selected as SIH (Smart India Hackathon) Internal Finalist for autonomous robotics track',
+      'MSME Ministry internal selection for innovative autonomous systems category',
+      'Real-time 96.4% object detection accuracy with sub-40ms inference latency',
+      'Multi-agent coordination protocol enabling swarm behavior and task distribution',
+      'C++ embedded control layer communicating over custom serial protocol'
+    ],
+    fullDesc:'NEUROBOTS is a full-stack autonomous robotics platform that bridges high-level agentic AI planning with low-level hardware control. The system features a 7-agent coordination layer, real-time computer vision pipeline built on OpenCV and PyTorch, and a C++ embedded module for precise motor and actuator control.'
+  },
+  {
+    id:'kryptcom',
+    codename:'PROJ-KRYPTCOM // V1.8',
+    status:'ACTIVE_DEPLOYMENT',
+    title:'KRYPTCOM',
+    tagline:'Post-Quantum Cryptographic Secure Enclave',
+    desc:'A production-grade secure communication enclave implementing NIST-standardized ML-KEM (CRYSTALS-Kyber) for quantum-resistant key encapsulation. Provides encrypted channels immune to both classical and quantum adversarial attacks.',
+    milestone:'NIST PQC STANDARD IMPLEMENTATION',
+    metrics:[
+      {label:'STANDARD',value:'ML-KEM'},
+      {label:'KEY SIZE',value:'768-bit'},
+      {label:'CIPHER',value:'Kyber'},
+      {label:'THREAT',value:'Q-SAFE'}
+    ],
+    tags:['Python','CRYSTALS-Kyber','NIST ML-KEM','Cryptography','Lattice','Secure Enclave'],
+    filter:'pqc',
+    highlights:[
+      'Full NIST ML-KEM (CRYSTALS-Kyber) key encapsulation mechanism implementation',
+      'Quantum-resistant encrypted communication channels with forward secrecy',
+      'Lattice-based cryptographic primitives resistant to Shor\'s algorithm attacks',
+      'Zero-Trust architecture with authenticated key exchange and session management',
+      'Performance-optimized implementation with minimal overhead vs classical schemes'
+    ],
+    fullDesc:'KRYPTCOM is a research-to-production post-quantum cryptographic enclave that implements the NIST-standardized ML-KEM (CRYSTALS-Kyber) algorithm. Designed to protect communications against both classical and quantum adversaries, it provides drop-in replacement APIs for traditional key exchange while delivering quantum-safe guarantees.'
+  },
+  {
+    id:'cybersentry',
+    codename:'PROJ-CYBERSENTRY // V3.1',
+    status:'ACTIVE_DEPLOYMENT',
+    title:'CYBERSENTRY',
+    tagline:'1.2 Gbps Real-Time Network IDS',
+    desc:'A high-throughput network intrusion detection system capable of processing 1.2 Gbps of live traffic with behavioral anomaly detection, signature matching, and zero-day heuristic analysis. Built for enterprise-grade network defense.',
+    milestone:'1.2 GBPS THROUGHPUT ACHIEVED',
+    metrics:[
+      {label:'THROUGHPUT',value:'1.2Gbps'},
+      {label:'DETECTIONS',value:'99.1%'},
+      {label:'FALSE+',value:'<0.3%'},
+      {label:'LATENCY',value:'<2ms'}
+    ],
+    tags:['Python','C++','Networking','Packet Analysis','Anomaly Detection','IDS','Zero-Day'],
+    filter:'pqc',
+    highlights:[
+      '1.2 Gbps real-time packet capture and analysis without packet loss',
+      'Hybrid detection: signature-based + behavioral anomaly + zero-day heuristics',
+      '99.1% detection rate with less than 0.3% false positive rate',
+      'C++ high-speed packet processing core with Python rule engine integration',
+      'Real-time alerting dashboard with threat visualization and severity scoring'
+    ],
+    fullDesc:'CYBERSENTRY is a high-performance network intrusion detection system engineered to process raw network traffic at 1.2 Gbps throughput. It combines a C++ packet capture and processing core with a Python-based rule engine and machine learning anomaly detector, delivering enterprise-grade threat detection with sub-2ms alert latency.'
+  },
+  {
+    id:'nexus',
+    codename:'PROJ-NEXUS // V2.0',
+    status:'ACTIVE_DEPLOYMENT',
+    title:'NEXUS CSBS',
+    tagline:'Enterprise Transaction Mesh Platform',
+    desc:'A full-stack enterprise web platform with React frontend, Node.js/Express API layer, and dual-database architecture (MongoDB + SQL). Designed for high-volume transaction management with real-time sync and business intelligence.',
+    milestone:'ENTERPRISE PRODUCTION DEPLOYMENT',
+    metrics:[
+      {label:'STACK',value:'MERN+'},
+      {label:'TPS',value:'500+'},
+      {label:'UPTIME',value:'99.9%'},
+      {label:'USERS',value:'MULTI'}
+    ],
+    tags:['React','Node.js','Express','MongoDB','SQL','REST API','JWT','Full-Stack'],
+    filter:'fullstack',
+    highlights:[
+      'React SPA with optimized component architecture and state management',
+      'Node.js/Express REST API with JWT authentication and role-based access control',
+      'Dual-database: MongoDB for document storage + SQL for relational transaction data',
+      '500+ transactions per second capacity with horizontal scaling support',
+      'Real-time dashboard with WebSocket push updates and BI analytics'
+    ],
+    fullDesc:'NEXUS CSBS is a comprehensive enterprise transaction management platform that demonstrates full-stack engineering excellence. It features a React-based SPA, a Node.js/Express REST API backend, and a dual-database strategy combining MongoDB\'s flexible document model with SQL\'s relational integrity for complex business transactions.'
+  }
+];
+
+const JOURNEY_DATA = [
+  {
+    period:'2024 — PRESENT',
+    cat:'education',
+    catLabel:'EDUCATION',
+    title:'B.Tech Computer Science & Business Systems',
+    org:'Engineering Institution · India',
+    desc:'Pursuing a comprehensive B.Tech program converging computer science fundamentals, AI/ML, security, and business systems thinking.',
+    bullets:['Data Structures, Algorithms & System Design','Web Technologies & Full-Stack Development','Discrete Mathematics, Linear Algebra for ML','Business Systems Analysis & Enterprise Architecture']
+  },
+  {
+    period:'2024 — 2025',
+    cat:'competition',
+    catLabel:'COMPETITION',
+    title:'SIH & MSME Internal Selection — NEUROBOTS',
+    org:'Smart India Hackathon / MSME Ministry · India',
+    desc:'NEUROBOTS autonomous robotics platform selected as internal finalist for both Smart India Hackathon and MSME Ministry innovative systems category.',
+    bullets:['SIH Internal Finalist — Autonomous Robotics Track','MSME Ministry Internal Selection — Innovative Systems','Competed against 100+ teams in preliminary rounds','Demonstrated 96.4% accuracy autonomous navigation system']
+  },
+  {
+    period:'2024 — 2025',
+    cat:'initiative',
+    catLabel:'INITIATIVE',
+    title:'Kryptcom PQC Genesis — Post-Quantum Research',
+    org:'Independent Research Initiative',
+    desc:'Self-initiated research and development of a post-quantum cryptographic secure enclave implementing NIST-standardized algorithms.',
+    bullets:['Independently studied NIST PQC standardization process','Implemented CRYSTALS-Kyber (ML-KEM) from academic papers','Designed quantum-resistant communication protocol','Zero-Trust architecture with post-quantum primitives']
+  },
+  {
+    period:'2024 — 2025',
+    cat:'certification',
+    catLabel:'CERTIFICATION',
+    title:'Professional Certifications — Full-Stack, Security & Algorithms',
+    org:'Industry Certification Bodies',
+    desc:'Completed professional certifications across full-stack web development, cybersecurity fundamentals, and advanced algorithms.',
+    bullets:['Full-Stack Web Development Certification','Cybersecurity Fundamentals & Network Defense','Data Structures & Algorithms (Advanced)','Completion of specialized AI/ML coursework']
+  },
+  {
+    period:'2025 — PRESENT',
+    cat:'research',
+    catLabel:'RESEARCH',
+    title:'Active Frontier: Agentic AI & Quantum Zero-Trust',
+    org:'Personal Research Lab · MDE',
+    desc:'Ongoing research at the intersection of agentic AI systems, post-quantum cryptography, and quantum-secure zero-trust network architecture.',
+    bullets:['Designing multi-agent AI coordination frameworks','Quantum Zero-Trust network architecture research','Integration of PQC with modern authentication protocols','Autonomous systems safety and alignment research']
+  }
+];
+
+/* ─────────────────────────────────────────────
+   BOOT SEQUENCE
+───────────────────────────────────────────── */
+(function initBoot() {
+  const overlay = document.getElementById('boot-overlay');
+  const linesEl = document.getElementById('boot-lines');
+  const lines = [
+    {text:'[ OK ] MDE SYSTEM INITIALIZING...', cls:'ok', delay:0},
+    {text:'[ OK ] Loading neural subsystems...', cls:'ok', delay:300},
+    {text:'[ OK ] Mounting security modules...', cls:'ok', delay:600},
+    {text:'[ !! ] Scanning for quantum threats...', cls:'warn', delay:900},
+    {text:'[ OK ] PQC shield active (ML-KEM-768)', cls:'ok', delay:1100},
+    {text:'[ >> ] Initializing MANUJ DIGITAL ENVIRONMENT...', cls:'info', delay:1400}
+  ];
+  lines.forEach(l => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'boot-line';
+      div.style.animationDelay = '0s';
+      const span = document.createElement('span');
+      span.className = l.cls;
+      span.textContent = l.text;
+      div.appendChild(span);
+      linesEl.appendChild(div);
+    }, l.delay);
+  });
+  function dismiss() {
+    overlay.classList.add('hidden');
+    overlay.addEventListener('transitionend', () => {
+      overlay.style.display = 'none';
+    }, {once:true});
+  }
+  setTimeout(dismiss, 2200);
+  overlay.addEventListener('click', dismiss);
+})();
+
+/* ─────────────────────────────────────────────
+   NAVBAR SCROLL + CLOCK
+───────────────────────────────────────────── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+  updateActiveNav();
+});
+
+function updateActiveNav() {
+  const sections = ['command','about','arsenal','projects','journey','resume'];
+  const scrollY = window.scrollY + 100;
+  let active = sections[0];
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.offsetTop <= scrollY) active = id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + active);
+  });
+}
+
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('nav-clock').textContent = `${h}:${m}:${s}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ─────────────────────────────────────────────
+   MOBILE NAV
+───────────────────────────────────────────── */
+const hamburger = document.getElementById('hamburger');
+const navMobile = document.getElementById('nav-mobile');
+hamburger.addEventListener('click', () => navMobile.classList.toggle('open'));
+function closeMobileNav() { navMobile.classList.remove('open'); }
+
+/* ─────────────────────────────────────────────
+   PARTICLES CANVAS
+───────────────────────────────────────────── */
+(function initParticles() {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  const COLORS = ['#00F2FE','#8B5CF6'];
+  const COUNT = 50;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function createParticle() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.8 + 0.4,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      alpha: Math.random() * 0.5 + 0.2
+    };
+  }
+
+  function init() {
+    resize();
+    particles = Array.from({length: COUNT}, createParticle);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    // Draw connection lines
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(0,242,254,${0.08 * (1 - dist/120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    // Draw particles
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + Math.round(p.alpha * 255).toString(16).padStart(2,'0');
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', init);
+  init();
+  draw();
+})();
+
+/* ─────────────────────────────────────────────
+   KEYWORD PANELS
+───────────────────────────────────────────── */
+(function initKeywords() {
+  const panel = document.getElementById('kw-panel');
+  const btns = document.querySelectorAll('.hero-keyword');
+  let activeKw = null;
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const kw = btn.dataset.kw;
+      if (activeKw === kw) {
+        panel.classList.remove('show');
+        btn.classList.remove('active');
+        activeKw = null;
+        return;
+      }
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeKw = kw;
+      const d = KEYWORD_DATA[kw];
+      document.getElementById('kp-title').textContent = d.title;
+      document.getElementById('kp-heading').textContent = d.heading;
+      document.getElementById('kp-desc').textContent = d.desc;
+      const tagsEl = document.getElementById('kp-tags');
+      tagsEl.innerHTML = d.tags.map(t => `<span class="kp-tag">${t}</span>`).join('');
+      panel.classList.add('show');
+    });
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#kw-panel') && !e.target.closest('.hero-keyword')) {
+      panel.classList.remove('show');
+      btns.forEach(b => b.classList.remove('active'));
+      activeKw = null;
+    }
+  });
+})();
+
+/* ─────────────────────────────────────────────
+   SKILLS / ARSENAL
+───────────────────────────────────────────── */
+(function initArsenal() {
+  const grid = document.getElementById('skills-grid');
+  const filterBtns = document.querySelectorAll('#arsenal-filters .filter-tab');
+  const inspector = document.getElementById('inspector-detail');
+  const inspEmpty = document.getElementById('inspector-empty');
+  let selectedCard = null;
+
+  function badgeClass(cat) {
+    const map = {programming:'badge-programming',frontend:'badge-frontend',backend:'badge-backend',database:'badge-database',exploring:'badge-exploring'};
+    return map[cat] || 'badge-programming';
+  }
+
+  function renderSkills(filter) {
+    const list = filter === 'all' ? SKILLS_DATA : SKILLS_DATA.filter(s => s.cat === filter);
+    grid.innerHTML = list.map((s,i) => `
+      <div class="skill-card reveal" data-skill="${i}" data-cat="${s.cat}" style="animation-delay:${i*0.05}s">
+        <div class="skill-name">${s.name}</div>
+        <div class="skill-badge ${badgeClass(s.cat)}">${s.cat.toUpperCase()}</div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar" style="width:${s.pct}%" data-pct="${s.pct}"></div>
+        </div>
+        <div class="skill-tags">${s.tags.map(t=>`<span class="skill-tag">${t}</span>`).join('')}</div>
+      </div>
+    `).join('');
+
+    // Animate bars
+    setTimeout(() => {
+      grid.querySelectorAll('.skill-bar').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+    }, 100);
+
+    // Skill card click
+    grid.querySelectorAll('.skill-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.dataset.skill);
+        const catFilter = document.querySelector('#arsenal-filters .filter-tab.active').dataset.filter;
+        const list2 = catFilter === 'all' ? SKILLS_DATA : SKILLS_DATA.filter(s => s.cat === catFilter);
+        const skill = list2[idx];
+        if (!skill) return;
+        if (selectedCard) selectedCard.classList.remove('selected');
+        selectedCard = card;
+        card.classList.add('selected');
+        inspEmpty.style.display = 'none';
+        inspector.style.display = 'block';
+        document.getElementById('insp-name').textContent = skill.name;
+        document.getElementById('insp-pct').textContent = skill.pct + '%';
+        document.getElementById('insp-bar').style.width = skill.pct + '%';
+        document.getElementById('insp-desc').textContent = skill.desc;
+        document.getElementById('insp-tags').innerHTML = skill.tags.map(t=>`<span class="inspector-tag">${t}</span>`).join('');
+      });
+    });
+
+    // Trigger reveal
+    setTimeout(observeReveal, 50);
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedCard = null;
+      inspector.style.display = 'none';
+      inspEmpty.style.display = 'block';
+      renderSkills(btn.dataset.filter);
+    });
+  });
+
+  renderSkills('all');
+})();
+
+/* ─────────────────────────────────────────────
+   PROJECTS
+───────────────────────────────────────────── */
+(function initProjects() {
+  const grid = document.getElementById('projects-grid');
+  const filterBtns = document.querySelectorAll('#project-filters .filter-tab');
+
+  function renderProjects(filter) {
+    const list = filter === 'all' ? PROJECTS_DATA : PROJECTS_DATA.filter(p => p.filter === filter);
+    grid.innerHTML = list.map((p,i) => `
+      <div class="project-card reveal" data-id="${p.id}">
+        <div class="project-codename">
+          ${p.codename}
+          <span class="project-status">${p.status}</span>
+        </div>
+        <div class="project-title">${p.title}</div>
+        <div class="project-tagline">${p.tagline}</div>
+        <div class="project-desc">${p.desc}</div>
+        <div class="project-milestone">${p.milestone}</div>
+        <div class="metrics-grid">
+          ${p.metrics.map(m=>`
+            <div class="metric-box">
+              <div class="metric-label">${m.label}</div>
+              <div class="metric-value">${m.value}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="project-tags">
+          ${p.tags.map(t=>`<span class="project-tag">${t}</span>`).join('')}
+        </div>
+        <div class="project-footer">
+          <button class="btn-inspect" data-id="${p.id}">⚙ INSPECT SYSTEM ARCHITECTURE</button>
+          <a class="icon-btn" href="https://github.com/" target="_blank" title="GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.34-3.369-1.34-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.071 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.091-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.03-2.682-.103-.253-.447-1.27.097-2.646 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.376.202 2.393.1 2.646.64.698 1.028 1.591 1.028 2.682 0 3.841-2.337 4.687-4.565 4.935.359.308.678.916.678 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          </a>
+          <a class="icon-btn" href="#projects" title="Link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('.btn-inspect').forEach(btn => {
+      btn.addEventListener('click', () => openProjectModal(btn.dataset.id));
+    });
+
+    setTimeout(observeReveal, 50);
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderProjects(btn.dataset.filter);
+    });
+  });
+
+  renderProjects('all');
+
+  // Modal
+  const modal = document.getElementById('project-modal');
+  const closeBtn = document.getElementById('modal-close');
+
+  function openProjectModal(id) {
+    const p = PROJECTS_DATA.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('m-codename').textContent = p.codename;
+    document.getElementById('m-title').textContent = p.title;
+    document.getElementById('m-tagline').textContent = p.tagline;
+    document.getElementById('m-desc').textContent = p.fullDesc;
+    document.getElementById('m-highlights').innerHTML = p.highlights.map(h=>`
+      <div class="modal-highlight">${h}</div>
+    `).join('');
+    document.getElementById('m-tech').innerHTML = p.tags.map(t=>`<span class="modal-tech-tag">${t}</span>`).join('');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+})();
+
+/* ─────────────────────────────────────────────
+   JOURNEY TIMELINE
+───────────────────────────────────────────── */
+(function initJourney() {
+  const timeline = document.getElementById('timeline');
+  const filterBtns = document.querySelectorAll('#journey-filters .filter-tab');
+
+  function render(filter) {
+    const list = filter === 'all' ? JOURNEY_DATA : JOURNEY_DATA.filter(j => j.cat === filter);
+    timeline.innerHTML = list.map(j => `
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-meta">
+          <span class="timeline-period">${j.period}</span>
+          <span class="timeline-cat cat-${j.cat}">${j.catLabel}</span>
+        </div>
+        <div class="timeline-title">${j.title}</div>
+        <div class="timeline-org">${j.org}</div>
+        <div class="timeline-desc">${j.desc}</div>
+        <div class="timeline-bullets">
+          ${j.bullets.map(b=>`<div class="timeline-bullet">${b}</div>`).join('')}
+        </div>
+      </div>
+    `).join('');
+    setTimeout(observeReveal, 50);
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render(btn.dataset.filter);
+    });
+  });
+
+  render('all');
+})();
+
+/* ─────────────────────────────────────────────
+   SCROLL REVEAL
+───────────────────────────────────────────── */
+function observeReveal() {
+  const els = document.querySelectorAll('.reveal:not(.visible)');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.1, rootMargin: '0px 0px -40px 0px'});
+  els.forEach(el => obs.observe(el));
+}
+observeReveal();
+
+/* ─────────────────────────────────────────────
+   RESUME — COPY EMAIL
+───────────────────────────────────────────── */
+function copyEmail() {
+  const email = 'manuj@example.com';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(email).then(() => alert('Email copied to clipboard!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = email;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Email copied to clipboard!');
+  }
+}
+
+/* ─────────────────────────────────────────────
+   TERMINAL
+───────────────────────────────────────────── */
+(function initTerminal() {
+  const modal = document.getElementById('terminal-modal');
+  const output = document.getElementById('term-output');
+  const input = document.getElementById('term-input');
+  const closeBtn = document.getElementById('term-close-btn');
+  const openBtn = document.getElementById('btn-open-terminal');
+  let history = [];
+  let historyIdx = -1;
+  let isOpen = false;
+
+  const COMMANDS = {
+    help: () => `
+<span class="hl">MDE TERMINAL // COMMAND REFERENCE</span>
+<span class="gl">────────────────────────────────────</span>
+<span class="hl">about</span>      — Personal profile & mission
+<span class="hl">skills</span>     — Technical arsenal overview
+<span class="hl">projects</span>   — All featured projects
+<span class="hl">sih</span>        — SIH & MSME competition details
+<span class="hl">pqc</span>        — Post-quantum cryptography work
+<span class="hl">contact</span>    — Contact information
+<span class="hl">clear</span>      — Clear terminal output
+<span class="hl">exit</span>       — Close terminal
+`,
+    about: () => `
+<span class="hl">// MANUJ U. — PROFILE</span>
+<span class="gl">────────────────────────────────────</span>
+<span class="vl">Role:</span>      B.Tech CSBS Undergraduate
+<span class="vl">Focus:</span>     Autonomous AI · PQC · Full-Stack · Cybersecurity
+<span class="vl">Status:</span>    <span class="gl">ACTIVE — building the future</span>
+<span class="vl">Motto:</span>     "Engineer systems that think, secure, and scale."
+`,
+    skills: () => `
+<span class="hl">// TECHNICAL ARSENAL</span>
+<span class="gl">────────────────────────────────────</span>
+<span class="vl">PROGRAMMING:</span>  Python 95% · C++ 94% · C 92% · Java 88%
+<span class="vl">FRONTEND:</span>     HTML5 96% · CSS3 95% · React 94%
+<span class="vl">BACKEND:</span>      Node.js 92% · Express 90%
+<span class="vl">DATABASE:</span>     MongoDB 90% · SQL 89%
+<span class="vl">EXPLORING:</span>    AI/Neural 93% · Cybersec 91% · PQC 90%
+`,
+    projects: () => `
+<span class="hl">// FEATURED PROJECTS</span>
+<span class="gl">────────────────────────────────────</span>
+<span class="yl">1. NEUROBOTS</span>    — Autonomous Agentic Robotics [SIH/MSME Finalist]
+<span class="yl">2. KRYPTCOM</span>     — Post-Quantum Cryptographic Secure Enclave
+<span class="yl">3. CYBERSENTRY</span>  — 1.2Gbps Real-Time Network IDS
+<span class="yl">4. NEXUS CSBS</span>   — Enterprise Full-Stack Transaction Mesh
+`,
+    sih: () => `
+<span class="hl">// SIH & MSME RECOGNITION — NEUROBOTS</span>
+<span class="gl">────────────────────────────────────</span>
+<span class="vl">Competition:</span>  Smart India Hackathon (SIH) 2024-2025
+<span class="vl">Result:</span>       <span class="gl">INTERNAL SELECTION FINALIST</span>
+<span class="vl">Also:</span>         MSME Ministry Internal Selection — Innovative Systems
+<span class="vl">System:</span>       Autonomous multi-agent robotic platform
+<span class="vl">Accuracy:</span>     96.4% detection · &lt;40ms latency
+`,
+    pqc: () => `
+<span class="hl">// POST-QUANTUM CRYPTOGRAPHY — KRYPTCOM</span>
+<span class="gl">────────────────────────────────────</span>
+<span class="vl">Algorithm:</span>    CRYSTALS-Kyber (NIST ML-KEM Standard)
+<span class="vl">Security:</span>     Quantum-resistant key encapsulation mechanism
+<span class="vl">Threat Model:</span> Resistant to Shor's algorithm (quantum attacks)
+<span class="vl">Architecture:</span> Zero-Trust with post-quantum primitives
+<span class="vl">Status:</span>       <span class="gl">ACTIVE DEVELOPMENT</span>
+`,
+    contact: () => `
+<span class="hl">// CONTACT INFORMATION</span>
+<span class="gl">────────────────────────────────────</span>
+<span class="vl">Email:</span>    manuj@example.com
+<span class="vl">GitHub:</span>   github.com/manuju
+<span class="vl">LinkedIn:</span> linkedin.com/in/manuju
+<span class="vl">Status:</span>   <span class="gl">OPEN TO COLLABORATION</span>
+`,
+    clear: () => { output.innerHTML = ''; return null; },
+    exit: () => { closeTerminal(); return null; }
+  };
+
+  const ALL_CMDS = Object.keys(COMMANDS);
+
+  function addLine(html, type) {
+    const div = document.createElement('div');
+    div.className = 'term-line';
+    if (type === 'prompt') {
+      div.innerHTML = `<span class="term-prompt">manuj@mde:~$</span> <span class="term-cmd">${html}</span>`;
+    } else if (type === 'out') {
+      div.innerHTML = `<pre class="term-out" style="white-space:pre-wrap;font-family:inherit;margin:0">${html}</pre>`;
+    } else if (type === 'err') {
+      div.innerHTML = `<span class="term-err">${html}</span>`;
+    }
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
+  }
+
+  function runCommand(cmd) {
+    const c = cmd.trim().toLowerCase();
+    if (!c) return;
+    history.unshift(c);
+    historyIdx = -1;
+    addLine(cmd, 'prompt');
+    if (COMMANDS[c]) {
+      const result = COMMANDS[c]();
+      if (result !== null && result !== undefined) addLine(result.trim(), 'out');
+    } else {
+      addLine(`Command not found: <span class="hl">${c}</span>. Type <span class="hl">help</span> for available commands.`, 'err');
+    }
+  }
+
+  function openTerminal() {
+    modal.classList.add('open');
+    isOpen = true;
+    if (output.children.length === 0) {
+      addLine('MDE TERMINAL v2.4.0 — MANUJ DIGITAL ENVIRONMENT', 'out');
+      addLine('Type <span class="hl">help</span> for available commands. Press <span class="hl">Ctrl+K</span> to toggle.', 'out');
+      addLine('', 'out');
+    }
+    setTimeout(() => input.focus(), 100);
+  }
+
+  function closeTerminal() {
+    modal.classList.remove('open');
+    isOpen = false;
+  }
+
+  openBtn.addEventListener('click', openTerminal);
+  closeBtn.addEventListener('click', closeTerminal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeTerminal(); });
+
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      isOpen ? closeTerminal() : openTerminal();
+    }
+    if (e.key === 'Escape' && isOpen) closeTerminal();
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      runCommand(input.value);
+      input.value = '';
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (historyIdx < history.length - 1) {
+        historyIdx++;
+        input.value = history[historyIdx] || '';
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIdx > 0) {
+        historyIdx--;
+        input.value = history[historyIdx] || '';
+      } else {
+        historyIdx = -1;
+        input.value = '';
+      }
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const val = input.value.trim().toLowerCase();
+      if (!val) return;
+      const match = ALL_CMDS.find(c => c.startsWith(val));
+      if (match) input.value = match;
+    }
+  });
+})();
+
+/* ─────────────────────────────────────────────
+   ACTIVE NAV ON LOAD
+───────────────────────────────────────────── */
+window.addEventListener('load', () => {
+  updateActiveNav();
+  observeReveal();
+});
+</script>
+</body>
+</html>
