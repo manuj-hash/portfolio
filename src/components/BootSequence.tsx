@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Terminal, Shield, Cpu, Sparkles } from 'lucide-react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Terminal, Shield, Cpu, Sparkles, FastForward } from 'lucide-react';
 import { soundFX } from '../utils/audio';
 
 interface BootSequenceProps {
@@ -17,6 +17,13 @@ export const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
   const [logIndex, setLogIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
+
+  const handleFinish = useCallback(() => {
+    setIsFading(true);
+    setTimeout(() => {
+      onComplete();
+    }, 250);
+  }, [onComplete]);
 
   useEffect(() => {
     soundFX.playBootHum();
@@ -41,21 +48,40 @@ export const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
 
       if (elapsed >= duration) {
         clearInterval(interval);
-        setIsFading(true);
-        setTimeout(() => {
-          onComplete();
-        }, 300); // 300ms smooth fade transition
+        handleFinish();
       }
     }, 25);
 
-    return () => clearInterval(interval);
-  }, [onComplete]);
+    // Fallback safety timeout
+    const fallbackTimer = setTimeout(() => {
+      clearInterval(interval);
+      handleFinish();
+    }, 2200);
+
+    // ESC key listener to skip immediately
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Enter') {
+        clearInterval(interval);
+        clearTimeout(fallbackTimer);
+        handleFinish();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(fallbackTimer);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [handleFinish]);
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-mde-void text-mde-text select-none transition-opacity duration-300 ${
+      onClick={handleFinish}
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-mde-void text-mde-text select-none cursor-pointer transition-opacity duration-300 ${
         isFading ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
+      title="Click anywhere to skip boot sequence"
     >
       {/* Background ambient glow */}
       <div className="absolute inset-0 bg-cyber-grid opacity-20 pointer-events-none" />
@@ -122,9 +148,9 @@ export const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
 
           <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
             <span>SYS_FREQ: 3.84 GHz</span>
-            <span className="flex items-center gap-1">
-              <Sparkles className="w-2.5 h-2.5 text-mde-cyan" />
-              TIME DURATION: 2.0s
+            <span className="flex items-center gap-1 text-mde-cyan/70 hover:text-mde-cyan">
+              <FastForward className="w-2.5 h-2.5" />
+              [CLICK OR ESC TO SKIP]
             </span>
           </div>
         </div>

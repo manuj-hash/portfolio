@@ -30,8 +30,6 @@ export function App() {
 
   // Track active section for HUD telemetry
   useEffect(() => {
-    if (!isBooted) return;
-
     const sections = ['command', 'about', 'arsenal', 'projects', 'journey', 'resume'];
     const handleScroll = () => {
       const scrollPos = window.scrollY + 250;
@@ -50,7 +48,7 @@ export function App() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isBooted]);
+  }, []);
 
   const handleNavigateSection = (sectionId: string) => {
     const el = document.getElementById(sectionId);
@@ -61,13 +59,13 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-mde-void text-mde-text relative selection:bg-mde-cyan selection:text-black">
-      {/* 2-Second Cinematic Boot Sequence */}
+      {/* 2-Second Cinematic Boot Sequence Overlay */}
       {!isBooted && (
         <BootSequence onComplete={() => setIsBooted(true)} />
       )}
 
-      {/* Main Digital Environment Workspace */}
-      <div className={`transition-opacity duration-700 ${isBooted ? 'opacity-100' : 'opacity-0'}`}>
+      {/* Main Digital Environment Workspace (Always mounted and ready) */}
+      <div className="w-full relative z-10">
         <CursorAura />
         
         <NavbarHUD

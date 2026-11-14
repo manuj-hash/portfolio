@@ -5,26 +5,41 @@ class SoundFX {
   private isMuted: boolean = false;
 
   constructor() {
-    // Keep unmuted or check saved preference
-    const saved = localStorage.getItem('mde_muted');
-    this.isMuted = saved === 'true';
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const saved = localStorage.getItem('mde_muted');
+        this.isMuted = saved === 'true';
+      }
+    } catch {
+      this.isMuted = false;
+    }
   }
 
   private initContext() {
-    if (!this.ctx && typeof window !== 'undefined') {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      if (AudioCtx) {
-        this.ctx = new AudioCtx();
+    try {
+      if (!this.ctx && typeof window !== 'undefined') {
+        const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        if (AudioCtx) {
+          this.ctx = new AudioCtx();
+        }
       }
-    }
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume().catch(() => {});
+      if (this.ctx && this.ctx.state === 'suspended') {
+        this.ctx.resume().catch(() => {});
+      }
+    } catch {
+      // Audio context restricted or blocked
     }
   }
 
   public toggleMute(): boolean {
     this.isMuted = !this.isMuted;
-    localStorage.setItem('mde_muted', this.isMuted ? 'true' : 'false');
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem('mde_muted', this.isMuted ? 'true' : 'false');
+      }
+    } catch {
+      // Storage restricted
+    }
     if (!this.isMuted) {
       this.playChirp(880, 0.05, 0.03);
     }
