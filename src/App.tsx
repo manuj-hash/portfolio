@@ -1,6 +1,15 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ArrowDown, ArrowUpRight, Code2, Github, GraduationCap, Linkedin, Menu, ShieldCheck, X } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Code2, GraduationCap, Menu, ShieldCheck, X } from 'lucide-react';
+
+
+function GitHubMark() {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.53v-2.07c-3.1.67-3.76-1.32-3.76-1.32-.5-1.29-1.23-1.63-1.23-1.63-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.76 2.14 3.32 1.63.1-.72.39-1.21.7-1.49-2.48-.28-5.09-1.24-5.09-5.53 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.15a10.6 10.6 0 0 1 5.55 0c2.12-1.45 3.05-1.15 3.05-1.15.61 1.54.23 2.68.11 2.96.72.78 1.15 1.78 1.15 3 0 4.3-2.61 5.24-5.1 5.52.4.35.75 1.03.75 2.08V22c0 .29.2.63.76.52A11.1 11.1 0 0 0 12 .9Z"/></svg>;
+}
+
+function LinkedInMark() {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.2 3.2a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2ZM3.4 9h3.6v11.6H3.4V9Zm5.8 0h3.4v1.6h.05A3.72 3.72 0 0 1 16 8.7c3.65 0 4.33 2.4 4.33 5.52v6.38h-3.6v-5.66c0-1.35-.02-3.08-1.88-3.08-1.89 0-2.18 1.47-2.18 2.98v5.76H9.2V9Z"/></svg>;
+}
 
 const projects = [
   { n: '01', name: 'BizInsight', category: 'BUSINESS ANALYTICS · FULL STACK', status: 'IN DEVELOPMENT', desc: 'A business analytics and decision-support platform designed to turn operational data into clearer business decisions.', tags: ['React', 'Node.js', 'Express', 'Supabase'], visual: 'biz', href: 'https://github.com/manuj-hash/bizinsight', note: 'Analytics · Inventory · Reports' },
@@ -210,7 +219,7 @@ function App() {
           <p className="contact-copy">I'm open to connecting with people who enjoy learning, building and solving thoughtful problems.</p>
           <a className="button button-light" href="https://www.linkedin.com/in/manuj-u/" target="_blank" rel="noreferrer">Connect on LinkedIn <ArrowUpRight size={17} /></a>
         </Reveal></div>
-        <footer className="contact-footer"><span>MANUJ U. · CSBS</span><div className="social-links"><a href="https://github.com/manuj-hash" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={18} /></a><a href="https://www.linkedin.com/in/manuj-u/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={18} /></a><a href="https://leetcode.com/u/MANUJ_U/" target="_blank" rel="noreferrer" aria-label="LeetCode"><Code2 size={18} /></a></div><span>© 2026 · BUILT WITH INTENT</span></footer>
+        <footer className="contact-footer"><span>MANUJ U. · CSBS</span><div className="social-links"><a href="https://github.com/manuj-hash" target="_blank" rel="noreferrer" aria-label="GitHub"><GitHubMark /></a><a href="https://www.linkedin.com/in/manuj-u/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><LinkedInMark /></a><a href="https://leetcode.com/u/MANUJ_U/" target="_blank" rel="noreferrer" aria-label="LeetCode"><Code2 size={18} /></a></div><span>© 2026 · BUILT WITH INTENT</span></footer>
       </section>
     </main>
   </div>;
