@@ -1,228 +1,81 @@
-
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ArrowDown, ArrowUpRight, Code2, GraduationCap, Menu, ShieldCheck, X } from 'lucide-react';
-
-
-function GitHubMark() {
-  return <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.53v-2.07c-3.1.67-3.76-1.32-3.76-1.32-.5-1.29-1.23-1.63-1.23-1.63-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.76 2.14 3.32 1.63.1-.72.39-1.21.7-1.49-2.48-.28-5.09-1.24-5.09-5.53 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.15a10.6 10.6 0 0 1 5.55 0c2.12-1.45 3.05-1.15 3.05-1.15.61 1.54.23 2.68.11 2.96.72.78 1.15 1.78 1.15 3 0 4.3-2.61 5.24-5.1 5.52.4.35.75 1.03.75 2.08V22c0 .29.2.63.76.52A11.1 11.1 0 0 0 12 .9Z"/></svg>;
-}
-
-function LinkedInMark() {
-  return <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.2 3.2a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2ZM3.4 9h3.6v11.6H3.4V9Zm5.8 0h3.4v1.6h.05A3.72 3.72 0 0 1 16 8.7c3.65 0 4.33 2.4 4.33 5.52v6.38h-3.6v-5.66c0-1.35-.02-3.08-1.88-3.08-1.89 0-2.18 1.47-2.18 2.98v5.76H9.2V9Z"/></svg>;
-}
+import { useEffect, useMemo, useRef, useState } from 'react';
+import * as THREE from 'three';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ArrowDown, ArrowRight, ArrowUpRight, Code2, Github, GraduationCap, Linkedin, Menu, X } from 'lucide-react';
 
 const projects = [
-  { n: '01', name: 'BizInsight', category: 'BUSINESS ANALYTICS · FULL STACK', status: 'IN DEVELOPMENT', desc: 'A business analytics and decision-support platform designed to turn operational data into clearer business decisions.', tags: ['React', 'Node.js', 'Express', 'Supabase'], visual: 'biz', href: 'https://github.com/manuj-hash/bizinsight', note: 'Analytics · Inventory · Reports' },
-  { n: '02', name: 'ECDAT', category: 'CYBERSECURITY · CRYPTOGRAPHY', status: 'RESEARCH & DEVELOPMENT', desc: 'An Enterprise Cryptographic Discovery & Analysis Tool focused on cryptographic discovery, CBOM generation and post-quantum migration readiness.', tags: ['Cybersecurity', 'CBOM', 'PQC', 'Blockchain'], visual: 'ecdat', href: 'https://github.com/cheenu-exe/ecdat-platform', note: 'Discover · Assess · Migrate' },
-  { n: '03', name: 'Kryptcom', category: 'SECURE COMMUNICATION · PQC', status: 'SELECTED · FINAL ROUND', desc: 'A secure communication platform exploring post-quantum cryptographic readiness and stronger foundations for private digital communication.', tags: ['Secure Systems', 'Cryptography', 'PQC'], visual: 'krypt', note: 'Privacy · Trust · Readiness' }
+ {number:'01',name:'BizInsight',type:'BUSINESS ANALYTICS / FULL STACK',status:'IN DEVELOPMENT',description:'A business analytics and decision-support platform designed to turn operational data into clearer business decisions.',stack:['React','Node.js','Express','Supabase'],href:'https://github.com/manuj-hash/bizinsight',symbol:'BI'},
+ {number:'02',name:'ECDAT',type:'CYBERSECURITY / CRYPTOGRAPHY',status:'RESEARCH & DEVELOPMENT',description:'An Enterprise Cryptographic Discovery & Analysis Tool focused on cryptographic discovery, CBOM generation and post-quantum migration readiness.',stack:['Cybersecurity','CBOM','PQC','Blockchain'],href:'https://github.com/cheenu-exe/ecdat-platform',symbol:'EC'},
+ {number:'03',name:'Kryptcom',type:'SECURE COMMUNICATION / PQC',status:'SELECTED · FINAL ROUND',description:'A secure communication platform exploring post-quantum cryptographic readiness and stronger foundations for private digital communication.',stack:['Secure Systems','Cryptography','PQC'],href:'',symbol:'K'}
 ];
-
 const skillGroups = [
-  { title: 'PROGRAMMING', items: ['C', 'C++', 'Java · Beginner', 'Python · Beginner'] },
-  { title: 'WEB & BACKEND', items: ['HTML', 'CSS', 'React', 'Node.js', 'Express.js'] },
-  { title: 'DATA & TOOLS', items: ['SQL', 'Supabase', 'Git', 'GitHub'] },
-  { title: 'EXPLORING', items: ['AI & Analytics', 'Cybersecurity', 'Post-Quantum Cryptography'] }
+ {title:'PROGRAMMING',items:['C','C++','Java · Beginner','Python · Beginner']},
+ {title:'WEB & BACKEND',items:['HTML','CSS','React','Node.js','Express.js']},
+ {title:'DATA & TOOLS',items:['SQL','Supabase','Git','GitHub']},
+ {title:'EXPLORING',items:['AI & Analytics','Cybersecurity','Post-Quantum Cryptography']}
 ];
 
-function BootSequence({ onComplete }: { onComplete: () => void }) {
-  const [exit, setExit] = useState(false);
-  useEffect(() => {
-    const a = window.setTimeout(() => setExit(true), 1800);
-    const b = window.setTimeout(onComplete, 2000);
-    return () => { window.clearTimeout(a); window.clearTimeout(b); };
-  }, [onComplete]);
-  return <div className={'boot-screen' + (exit ? ' boot-screen--exit' : '')}>
-    <div className="boot-grid" />
-    <div className="boot-inner">
-      <div className="boot-top"><span>MU / PERSONAL SYSTEM</span><span>BUILD 2026.11</span></div>
-      <div className="boot-mark">m<span>.</span></div>
-      <p className="boot-kicker">INITIALIZING PERSONAL SPACE</p>
-      <h1>MANUJ<span>.</span>DEV</h1>
-      <div className="boot-log">
-        <p><b>&gt;</b> loading identity profile <i>OK</i></p>
-        <p><b>&gt;</b> preparing selected work <i>OK</i></p>
-        <p><b>&gt;</b> establishing creative direction <i>OK</i></p>
-      </div>
-      <div className="boot-progress"><span /></div>
-      <div className="boot-bottom"><span>DESIGNING WITH INTENT</span><span>00:02</span></div>
-    </div>
-  </div>;
+function BootSequence({onComplete}:{onComplete:()=>void}) {
+ const [leaving,setLeaving]=useState(false);
+ useEffect(()=>{const a=window.setTimeout(()=>setLeaving(true),1750);const b=window.setTimeout(onComplete,2000);return()=>{window.clearTimeout(a);window.clearTimeout(b)}},[onComplete]);
+ return <motion.div className="boot-screen" initial={{opacity:1}} animate={{opacity:leaving?0:1}} transition={{duration:.24}}>
+  <div className="boot-scan"/><div className="boot-content">
+   <div className="boot-meta"><span>MU / PERSONAL SYSTEM</span><span>BUILD 2026.11</span></div>
+   <div className="boot-emblem">M<span>.</span></div><p>INITIALIZING PERSONAL PROFILE</p><h1>MANUJ<span>.DEV</span></h1>
+   <div className="boot-terminal"><span><i>01</i> loading identity profile <b>READY</b></span><span><i>02</i> synchronizing selected work <b>READY</b></span><span><i>03</i> opening digital space <b>READY</b></span></div>
+   <div className="boot-progress"><span/></div><div className="boot-meta boot-bottom"><span>BUILDING WITH INTENT</span><span>00:02</span></div>
+  </div>
+ </motion.div>;
 }
 
-function ParticleTree({ wide = false }: { wide?: boolean }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    let w = 0, h = 0, raf = 0, tick = 0;
-    let dots: { x: number; y: number; r: number; p: number }[] = [];
-    const resize = () => {
-      const box = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = box.width; h = box.height;
-      canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      dots = Array.from({ length: Math.max(100, Math.floor(w * .24)) }, () => {
-        const y = .08 + Math.random() * .82;
-        return { x: .5 + (Math.random() - .5) * (.06 + y * .82), y, r: .7 + Math.random() * 1.5, p: Math.random() * 6.28 };
-      });
-    };
-    const draw = () => {
-      tick += .006;
-      ctx.clearRect(0, 0, w, h);
-      const points = dots.map(d => ({ x: d.x * w + Math.sin(tick + d.p) * 5, y: d.y * h, r: d.r, p: d.p }));
-      const halo = ctx.createRadialGradient(w * .5, h * .53, 0, w * .5, h * .53, w * .48);
-      halo.addColorStop(0, 'rgba(89,126,255,.18)'); halo.addColorStop(1, 'rgba(89,126,255,0)');
-      ctx.fillStyle = halo; ctx.fillRect(0, 0, w, h);
-      for (let i = 0; i < points.length; i++) for (let j = i + 1; j < points.length; j++) {
-        const dx = points[i].x - points[j].x, dy = points[i].y - points[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 48) {
-          ctx.strokeStyle = 'rgba(145,174,255,' + ((1 - dist / 48) * .2) + ')';
-          ctx.lineWidth = .65; ctx.beginPath(); ctx.moveTo(points[i].x, points[i].y); ctx.lineTo(points[j].x, points[j].y); ctx.stroke();
-        }
-      }
-      points.forEach(p => {
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(177,198,255,' + (.5 + Math.sin(tick * 2 + p.p) * .25) + ')';
-        ctx.shadowColor = '#7195ff'; ctx.shadowBlur = 9; ctx.fill();
-      });
-      ctx.shadowBlur = 0;
-      raf = window.requestAnimationFrame(draw);
-    };
-    resize(); draw(); window.addEventListener('resize', resize);
-    return () => { window.cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
-  }, []);
-  return <canvas ref={ref} className={'particle-tree' + (wide ? ' particle-tree--wide' : '')} aria-hidden="true" />;
+function ParticleUniverse(){
+ const canvasRef=useRef<HTMLCanvasElement>(null);const reducedMotion=useReducedMotion();
+ useEffect(()=>{
+  const canvas=canvasRef.current;if(!canvas)return;let renderer:THREE.WebGLRenderer;
+  try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:false,powerPreference:'high-performance'})}catch{canvas.classList.add('webgl-fallback');return}
+  const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.z=9.2;
+  const mobile=window.matchMedia('(max-width:700px)').matches;const count=mobile?2400:7600;
+  const positions=new Float32Array(count*3),sizes=new Float32Array(count),colors=new Float32Array(count*3);
+  const blue=new THREE.Color('#168bff'),cyan=new THREE.Color('#00cfff'),violet=new THREE.Color('#773bff');
+  for(let i=0;i<count;i++){const core=Math.random()<.28;const theta=Math.random()*Math.PI*2;const phi=Math.acos(2*Math.random()-1);const r=core?Math.random()*1.1:1.1+Math.pow(Math.random(),.72)*2.25;const swirl=theta+(phi-Math.PI/2)*.62;positions[i*3]=Math.sin(phi)*Math.cos(swirl)*r*1.52;positions[i*3+1]=Math.cos(phi)*r*(.68+Math.random()*.18);positions[i*3+2]=Math.sin(phi)*Math.sin(swirl)*r*.72;sizes[i]=core?1.2+Math.random()*2.2:.55+Math.random()*1.4;const c=Math.random()>.91?violet:Math.random()>.46?cyan:blue;const intensity=core?.8+Math.random()*.5:.48+Math.random()*.52;colors[i*3]=c.r*intensity;colors[i*3+1]=c.g*intensity;colors[i*3+2]=c.b*intensity}
+  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));geometry.setAttribute('aSize',new THREE.BufferAttribute(sizes,1));geometry.setAttribute('aColor',new THREE.BufferAttribute(colors,3));
+  const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{uTime:{value:0},uPixelRatio:{value:Math.min(window.devicePixelRatio||1,1.7)}},vertexShader:['attribute float aSize;','attribute vec3 aColor;','uniform float uTime;','uniform float uPixelRatio;','varying vec3 vColor;','varying float vAlpha;','void main(){','vec3 p=position;','float wave=sin(p.x*1.8+uTime*.55)*.075+cos(p.y*2.2-uTime*.4)*.06;','p+=normalize(position+vec3(.001))*wave;','float a=uTime*.055;','float c=cos(a),s=sin(a);','p.xz=mat2(c,-s,s,c)*p.xz;','vec4 mv=modelViewMatrix*vec4(p,1.0);','gl_Position=projectionMatrix*mv;','gl_PointSize=aSize*uPixelRatio*(32.0/max(1.0,-mv.z));','vColor=aColor;vAlpha=smoothstep(8.0,1.5,-mv.z)*.92;','}'].join('\n'),fragmentShader:['varying vec3 vColor;','varying float vAlpha;','void main(){','vec2 uv=gl_PointCoord-.5;float d=length(uv);','float core=exp(-d*17.0);float halo=exp(-d*7.0)*.42;','float alpha=(core+halo)*vAlpha;if(alpha<.025)discard;','gl_FragColor=vec4(vColor,alpha);','}'].join('\n')});
+  const points=new THREE.Points(geometry,material);scene.add(points);
+  const ambientCount=mobile?200:600,ambientPositions=new Float32Array(ambientCount*3);for(let i=0;i<ambientCount;i++){ambientPositions[i*3]=(Math.random()-.5)*17;ambientPositions[i*3+1]=(Math.random()-.5)*10;ambientPositions[i*3+2]=-1-Math.random()*8}
+  const ambientGeometry=new THREE.BufferGeometry();ambientGeometry.setAttribute('position',new THREE.BufferAttribute(ambientPositions,3));const ambientMaterial=new THREE.PointsMaterial({color:'#4b9fff',size:.022,transparent:true,opacity:.56});const ambient=new THREE.Points(ambientGeometry,ambientMaterial);scene.add(ambient);
+  const resize=()=>{const w=window.innerWidth,h=window.innerHeight;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};resize();window.addEventListener('resize',resize);
+  let frame=0;const clock=new THREE.Clock();const render=()=>{frame=window.requestAnimationFrame(render);const t=clock.getElapsedTime();if(!reducedMotion){material.uniforms.uTime.value=t;points.rotation.y=Math.sin(t*.12)*.045;points.rotation.x=Math.sin(t*.09)*.025;ambient.rotation.y=t*.006}renderer.render(scene,camera)};render();
+  return()=>{window.cancelAnimationFrame(frame);window.removeEventListener('resize',resize);geometry.dispose();material.dispose();ambientGeometry.dispose();ambientMaterial.dispose();renderer.dispose()};
+ },[reducedMotion]);
+ return <canvas ref={canvasRef} className="universe-canvas" aria-hidden="true"/>;
 }
-
-function Reveal({ children, className = '' }: { children: ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setShown(true); observer.disconnect(); }
-    }, { threshold: .14 });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return <div ref={ref} className={'reveal' + (shown ? ' is-visible' : '') + ' ' + className}>{children}</div>;
+function EnergyFloor(){return <div className="energy-floor" aria-hidden="true"><div className="floor-horizon"/><div className="floor-grid"/><div className="energy-rings"><i/><i/><i/><i/></div><div className="floor-beam floor-beam-one"/><div className="floor-beam floor-beam-two"/></div>}
+function Navbar(){
+ const[open,setOpen]=useState(false);const links=[['About','about'],['Projects','projects'],['Skills','skills'],['Experience','experience'],['Contact','contact']];
+ return <header className="topbar"><a className="brand" href="#home" aria-label="Manuj home"><span className="brand-mark">M<span>.</span></span><span className="brand-name">MANUJ<span>.DEV</span></span></a><button className="menu-toggle" onClick={()=>setOpen(!open)} aria-label="Toggle navigation">{open?<X/>:<Menu/>}</button><nav className={open?'nav-glass nav-open':'nav-glass'}>{links.map(([label,id])=><a key={id} href={'#'+id} onClick={()=>setOpen(false)}>{label}</a>)}</nav><a className="nav-connect" href="#contact">Let's Connect <ArrowUpRight size={15}/></a></header>;
 }
-
-function ProjectArtwork({ visual }: { visual: string }) {
-  if (visual === 'biz') return <div className="biz-art"><div className="art-label">OVERVIEW / 01</div><small>REVENUE OVERVIEW</small><strong>+24.8%</strong><div className="biz-bars">{[28, 46, 39, 62, 52, 73, 65, 88, 100].map((v, i) => <i key={i} style={{ height: v + '%' }} />)}</div></div>;
-  if (visual === 'ecdat') return <div className="ecdat-art"><div className="orbit orbit-a" /><div className="orbit orbit-b" /><div className="art-core"><ShieldCheck size={36} /></div><span className="node node-a">CBOM</span><span className="node node-b">PQC</span><span className="node node-c">SCAN</span></div>;
-  return <div className="krypt-art"><div className="krypt-ring ring-a" /><div className="krypt-ring ring-b" /><div className="krypt-core"><ShieldCheck size={42} /></div><span>SECURE CHANNEL / READY</span></div>;
+function Reveal({children,className=''}:{children:React.ReactNode;className?:string}){
+ const reduced=useReducedMotion();return <motion.div className={className} initial={reduced?false:{opacity:0,y:28}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.16}} transition={{duration:.72,ease:[.22,1,.36,1]}}>{children}</motion.div>;
 }
-
-function App() {
-  const [booted, setBooted] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [active, setActive] = useState('home');
-
-  useEffect(() => {
-    const ids = ['home', 'about', 'work', 'approach', 'contact'];
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target.id); }), { rootMargin: '-35% 0px -55% 0px' });
-    ids.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
-    return () => observer.disconnect();
-  }, []);
-
-  const nav = [['About', 'about'], ['Selected work', 'work'], ['Approach', 'approach'], ['Contact', 'contact']];
-  const closeMenu = () => setMenuOpen(false);
-
-  return <div className={'site-shell' + (booted ? ' site-shell--ready' : '')}>
-    {!booted && <BootSequence onComplete={() => setBooted(true)} />}
-    <header className="site-header">
-      <a className="wordmark" href="#home" onClick={closeMenu}>m<span>.</span></a>
-      <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
-      <nav className={'nav-pill' + (menuOpen ? ' nav-pill--open' : '')}>
-        {nav.map(([label, id]) => <a key={id} className={active === id ? 'nav-link nav-link--active' : 'nav-link'} href={'#' + id} onClick={closeMenu}>{label}</a>)}
-        <a className="nav-cta" href="#contact" onClick={closeMenu}>Let's talk <ArrowUpRight size={15} /></a>
-      </nav>
-    </header>
-
-    <main>
-      <section id="home" className="hero">
-        <div className="hero-grain" />
-        <div className="hero-copy">
-          <div className="eyebrow"><i /> CSBS STUDENT · DEVELOPER IN PROGRESS</div>
-          <h1>Ideas into<br /><em>useful</em> software<span>.</span></h1>
-          <p>I'm Manuj — a computer science student exploring the space between software engineering, business thinking and emerging technology.</p>
-          <div className="hero-actions"><a className="button button-dark" href="#work">Explore my work <ArrowUpRight size={17} /></a><a className="text-link" href="#about">A little about me <ArrowDown size={15} /></a></div>
-          <div className="hero-foot"><span>BASED IN INDIA</span><span>BUILDING · LEARNING · EXPLORING</span></div>
-        </div>
-        <div className="hero-visual">
-          <div className="visual-label visual-top"><span>FIG. 01</span><span>IDEAS IN MOTION</span></div>
-          <div className="visual-orbit visual-orbit-a" /><div className="visual-orbit visual-orbit-b" />
-          <ParticleTree />
-          <div className="visual-caption"><span>01 / 03</span><b>CURIOUS BY DESIGN</b></div>
-          <div className="visual-label visual-bottom"><span>SOFTWARE</span><span>PEOPLE</span><span>PROBLEMS</span></div>
-        </div>
-        <div className="scroll-cue"><span>SCROLL TO EXPLORE</span><i /></div>
-      </section>
-
-      <section id="about" className="section about-section">
-        <div className="section-index"><b>01</b><i /> ABOUT</div>
-        <div className="about-grid">
-          <Reveal><p className="eyebrow muted">A STUDENT OF TECHNOLOGY & BUSINESS</p><h2>Learning to build<br />things that <em>matter.</em></h2></Reveal>
-          <Reveal className="about-copy">
-            <p className="large-copy">I enjoy taking complex ideas, understanding the problem behind them, and shaping them into practical software.</p>
-            <p>I'm pursuing Computer Science and Business Systems at Karpagam Academy of Higher Education. My interests span full-stack development, analytics, cybersecurity and post-quantum cryptography.</p>
-            <p>I'm still learning, experimenting and improving — with a focus on building thoughtfully rather than building just to ship.</p>
-            <div className="facts"><div><strong>7.78</strong><span>CGPA</span></div><div><strong>CSBS</strong><span>DEGREE</span></div><div><strong>02</strong><span>YEAR</span></div></div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section id="work" className="section work-section">
-        <div className="work-backdrop"><ParticleTree wide /></div>
-        <div className="section-index light-index"><b>02</b><i /> SELECTED WORK</div>
-        <div className="work-heading"><Reveal><h2>Curiosity, made<br /><em>tangible.</em></h2></Reveal><p>A selection of ideas and projects I'm exploring, developing and learning from.</p></div>
-        <div className="project-list">
-          {projects.map(project => <Reveal key={project.n}><article className="project-card">
-            <div className="project-visual"><ProjectArtwork visual={project.visual} /><span className="project-number">{project.n} / 03</span></div>
-            <div className="project-body">
-              <div className="project-meta"><span>{project.category}</span><small><i />{project.status}</small></div>
-              <h3>{project.name}<b>.</b></h3><p>{project.desc}</p>
-              <div className="project-tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
-              <div className="project-footer"><span>{project.note}</span>{project.href ? <a href={project.href} target="_blank" rel="noreferrer">Explore project <ArrowUpRight size={16} /></a> : <a href="#contact">Ask me about it <ArrowUpRight size={16} /></a>}</div>
-            </div>
-          </article></Reveal>)}
-        </div>
-      </section>
-
-      <section id="approach" className="section approach-section">
-        <div className="section-index"><b>03</b><i /> WHAT I'M WORKING WITH</div>
-        <div className="approach-heading"><Reveal><h2>A growing<br /><em>toolkit.</em></h2></Reveal><Reveal><p>Tools are part of the process. Understanding the problem, learning the fundamentals and choosing the right tool matter more.</p></Reveal></div>
-        <div className="skill-grid">{skillGroups.map((group, index) => <Reveal key={group.title} className="skill-card"><div className="skill-top"><span>0{index + 1}</span><Code2 size={18} /></div><h3>{group.title}</h3><div className="skill-items">{group.items.map(item => <span key={item}>{item}</span>)}</div></Reveal>)}</div>
-        <div className="learning-note"><span><GraduationCap size={20} /></span><p><b>Always learning.</b> I'm actively strengthening my foundations in data structures, full-stack development, analytics and security engineering.</p></div>
-      </section>
-
-      <section className="section journey-section">
-        <div className="section-index"><b>04</b><i /> THE JOURNEY</div>
-        <div className="journey-grid"><Reveal><h2>Progress over<br /><em>perfection.</em></h2></Reveal><div className="journey-items">
-          <Reveal className="journey-item"><span>2026 — NOW</span><div><h3>Building with purpose</h3><p>Developing projects across business analytics, cryptographic discovery and secure communication.</p></div><i>↗</i></Reveal>
-          <Reveal className="journey-item"><span>2026</span><div><h3>Project selections</h3><p>Selected through college internal rounds for SIH and MSME project tracks.</p></div><i>↗</i></Reveal>
-          <Reveal className="journey-item"><span>FOUNDATION</span><div><h3>Computer Science & Business Systems</h3><p>Learning to connect technical problem-solving with business context at Karpagam Academy of Higher Education.</p></div><i>↗</i></Reveal>
-        </div></div>
-      </section>
-
-      <section id="contact" className="contact-section">
-        <div className="contact-orb" />
-        <div className="contact-content"><div className="section-index light-index"><b>05</b><i /> GET IN TOUCH</div><Reveal>
-          <p className="eyebrow contact-eyebrow">HAVE AN IDEA, PROJECT OR OPPORTUNITY?</p>
-          <h2>Let's make<br /><em>something</em><br />meaningful.</h2>
-          <p className="contact-copy">I'm open to connecting with people who enjoy learning, building and solving thoughtful problems.</p>
-          <a className="button button-light" href="https://www.linkedin.com/in/manuj-u/" target="_blank" rel="noreferrer">Connect on LinkedIn <ArrowUpRight size={17} /></a>
-        </Reveal></div>
-        <footer className="contact-footer"><span>MANUJ U. · CSBS</span><div className="social-links"><a href="https://github.com/manuj-hash" target="_blank" rel="noreferrer" aria-label="GitHub"><GitHubMark /></a><a href="https://www.linkedin.com/in/manuj-u/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><LinkedInMark /></a><a href="https://leetcode.com/u/MANUJ_U/" target="_blank" rel="noreferrer" aria-label="LeetCode"><Code2 size={18} /></a></div><span>© 2026 · BUILT WITH INTENT</span></footer>
-      </section>
-    </main>
-  </div>;
+function HeroSection(){
+ const words=useMemo(()=>['Building','Ideas Into','Digital Reality.'],[]);const container={hidden:{},show:{transition:{staggerChildren:.14,delayChildren:.18}}};const word={hidden:{opacity:0,y:35},show:{opacity:1,y:0,transition:{duration:.7,ease:[.22,1,.36,1]}}};
+ return <section id="home" className="hero"><div className="hero-atmosphere"/><div className="hero-topline"><span><i/> SOFTWARE DEVELOPER</span><span>INDEPENDENT MIND / BUILDING IN PUBLIC</span></div>
+  <div className="hero-layout"><div className="hero-left"><motion.div className="hero-badge" initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:.08,duration:.55}}><span/> SOFTWARE DEVELOPER</motion.div><motion.h1 variants={container} initial="hidden" animate="show">{words.map((w,i)=><motion.span className={i===2?'headline-line headline-accent':'headline-line'} variants={word} key={w}>{w}</motion.span>)}</motion.h1><div className="hero-index"><span>01 / INTRODUCTION</span><span>SCROLL TO EXPLORE <ArrowDown size={13}/></span></div></div>
+   <motion.div className="hero-right" initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{delay:.62,duration:.8,ease:[.22,1,.36,1]}}><p className="intro-label">A LITTLE ABOUT ME <span>— 2026</span></p><p className="hero-description">I'm a computer science student and developer passionate about creating intelligent applications, solving problems and building meaningful digital experiences.</p><div className="hero-actions"><a className="primary-action" href="#projects">Explore My Projects <ArrowUpRight size={17}/></a><a className="secondary-action" href="#contact">Resume on Request <ArrowRight size={16}/></a></div><div className="hero-note"><span className="note-dot"/> COMPUTER SCIENCE & BUSINESS SYSTEMS <span className="note-sep">/</span> INDIA</div></motion.div>
+  </div><EnergyFloor/><div className="hero-scroll"><span>KEEP EXPLORING</span><i/></div></section>;
 }
-
+function ProjectCard({project}:{project:typeof projects[number]}){
+ return <Reveal className="project-shell"><article className="project-card"><div className="project-art"><div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="art-core"><span>{project.symbol}</span></div><span className="art-coordinate">SYSTEM / {project.number}</span><span className="art-status"><i/> {project.status}</span></div><div className="project-info"><div className="project-overline"><span>{project.number} — {project.type}</span><span className="project-status"><i/> {project.status}</span></div><h3>{project.name}<span>.</span></h3><p>{project.description}</p><div className="project-stack">{project.stack.map(tag=><span key={tag}>{tag}</span>)}</div><div className="project-bottom"><span>DESIGN / ENGINEERING / EXPLORATION</span>{project.href?<a href={project.href} target="_blank" rel="noreferrer">View project <ArrowUpRight size={16}/></a>:<a href="#contact">Ask me about it <ArrowUpRight size={16}/></a>}</div></div></article></Reveal>;
+}
+function App(){
+ const[booted,setBooted]=useState(false);const reduced=useReducedMotion();const complete=()=>setBooted(true);useEffect(()=>{if(reduced)setBooted(true)},[reduced]);
+ return <div className="site-shell"><ParticleUniverse/><div className="ambient-vignette" aria-hidden="true"/><AnimatePresence>{!booted&&<BootSequence onComplete={complete}/>}</AnimatePresence><Navbar/><main>
+  <HeroSection/>
+  <section id="about" className="content-section about-section"><div className="section-kicker"><span>01</span><i/> ABOUT</div><div className="about-grid"><Reveal><p className="section-eyebrow">STUDENT OF TECHNOLOGY & BUSINESS</p><h2>Curiosity is where<br/><em>everything begins.</em></h2></Reveal><Reveal className="about-copy"><p className="about-lead">I enjoy taking complex ideas, understanding the problem behind them, and shaping them into practical software.</p><p>I'm pursuing Computer Science and Business Systems at Karpagam Academy of Higher Education. My interests span full-stack development, analytics, cybersecurity and post-quantum cryptography.</p><p>I'm still learning, experimenting and improving — with a focus on building thoughtfully rather than building just to ship.</p><div className="about-facts"><div><b>7.78</b><span>CGPA</span></div><div><b>02</b><span>YEAR</span></div><div><b>CSBS</b><span>DEGREE</span></div></div></Reveal></div></section>
+  <section id="projects" className="content-section projects-section"><div className="section-kicker"><span>02</span><i/> SELECTED WORK</div><div className="section-heading"><Reveal><h2>Ideas, in the<br/><em>making.</em></h2></Reveal><Reveal><p>Projects shaped by curiosity, practical problems and a desire to understand how technology can do more.</p></Reveal></div><div className="project-list">{projects.map(p=><ProjectCard key={p.number} project={p}/>)}</div></section>
+  <section id="skills" className="content-section skills-section"><div className="section-kicker"><span>03</span><i/> SKILLS & TOOLS</div><div className="section-heading"><Reveal><h2>A toolkit that<br/><em>keeps growing.</em></h2></Reveal><Reveal><p>Fundamentals first. Tools are part of the process — understanding the problem and choosing the right approach matter more.</p></Reveal></div><div className="skill-grid">{skillGroups.map((g,i)=><Reveal className="skill-card" key={g.title}><div className="skill-card-top"><span>0{i+1}</span><Code2 size={18}/></div><h3>{g.title}</h3><div className="skill-tags">{g.items.map(item=><span key={item}>{item}</span>)}</div></Reveal>)}</div><div className="learning-line"><GraduationCap size={19}/><span><b>Always learning.</b> Currently strengthening my foundations in data structures, full-stack development, analytics and security engineering.</span></div></section>
+  <section id="experience" className="content-section experience-section"><div className="section-kicker"><span>04</span><i/> EXPERIENCE & JOURNEY</div><div className="experience-grid"><Reveal><h2>Progress over<br/><em>perfection.</em></h2></Reveal><div className="timeline"><Reveal className="timeline-item"><span>2026 — NOW</span><div><h3>Building with purpose</h3><p>Developing projects across business analytics, cryptographic discovery and secure communication.</p></div><ArrowUpRight size={17}/></Reveal><Reveal className="timeline-item"><span>2026</span><div><h3>Project selections</h3><p>Selected through college internal rounds for SIH and MSME project tracks.</p></div><ArrowUpRight size={17}/></Reveal><Reveal className="timeline-item"><span>FOUNDATION</span><div><h3>Computer Science & Business Systems</h3><p>Learning to connect technical problem-solving with business context at Karpagam Academy of Higher Education.</p></div><ArrowUpRight size={17}/></Reveal></div></div></section>
+  <section id="contact" className="contact-section"><div className="contact-glow"/><div className="section-kicker"><span>05</span><i/> CONTACT</div><Reveal className="contact-main"><p className="section-eyebrow">HAVE AN IDEA, PROJECT OR OPPORTUNITY?</p><h2>Let's build<br/><em>what's next.</em></h2><p>I'm open to connecting with people who enjoy learning, building and solving thoughtful problems.</p><a className="primary-action" href="https://www.linkedin.com/in/manuj-u/" target="_blank" rel="noreferrer">Connect on LinkedIn <ArrowUpRight size={17}/></a></Reveal><footer className="site-footer"><a className="footer-brand" href="#home">MANUJ<span>.DEV</span></a><div className="socials"><a href="https://github.com/manuj-hash" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={18}/></a><a href="https://www.linkedin.com/in/manuj-u/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={18}/></a><a href="https://leetcode.com/u/MANUJ_U/" target="_blank" rel="noreferrer" aria-label="LeetCode"><Code2 size={18}/></a></div><span>© 2026 MANUJ U. / BUILT WITH INTENT</span></footer></section>
+ </main></div>;
+}
 export default App;
