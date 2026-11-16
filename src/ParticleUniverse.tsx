@@ -9,6 +9,7 @@ function ParticleField({ reduced }: ParticleFieldProps) {
   const group = useRef<THREE.Group>(null);
   const material = useRef<THREE.ShaderMaterial>(null);
   const rippleStart = useRef(-100);
+  const ripplePending = useRef(false);
   const rippleCenter = useRef(new THREE.Vector2(0, 0));
   const { positions, sizes, colors } = useMemo(() => {
     const mobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 700px)').matches;
@@ -57,6 +58,10 @@ function ParticleField({ reduced }: ParticleFieldProps) {
 
   useFrame(({ clock, pointer, size }) => {
     const time = clock.getElapsedTime();
+    if (ripplePending.current) {
+      rippleStart.current = time;
+      ripplePending.current = false;
+    }
     if (material.current) {
       material.current.uniforms.uTime.value = reduced ? 0 : time;
       material.current.uniforms.uMouse.value.set(pointer.x * (size.width / size.height) * 4.5, pointer.y * 2.5);
@@ -71,7 +76,7 @@ function ParticleField({ reduced }: ParticleFieldProps) {
 
   const triggerRipple = (event: { point: THREE.Vector3 }) => {
     rippleCenter.current.set(event.point.x, event.point.y);
-    rippleStart.current = performance.now() / 1000;
+    ripplePending.current = true;
   };
 
   return (
