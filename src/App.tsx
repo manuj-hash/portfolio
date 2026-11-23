@@ -277,7 +277,7 @@ export default function App() {
             <div className="section-kicker">06 — EDUCATION</div>
             <div className="education-panel">
               <div className="education-icon"><GraduationCap /></div>
-              <div className="education-copy"><span className="overline">UNDERGRADUATE · CURRENT</span><h2>Karpagam Academy<br /><em>of Higher Education.</em></h2><h3>B.Tech / Computer Science and Business Systems</h3><p>Currently pursuing the second year of study, combining computing foundations with business-oriented problem solving.</p></div>
+              <div className="education-copy"><span className="overline">UNDERGRADUATE · CURRENT</span><h2>Karpagam Academy<br /><em>of Higher Education.</em></h2><h3>Computer Science and Business Systems</h3><p>Currently pursuing the second year of study, combining computing foundations with business-oriented problem solving.</p></div>
               <div className="education-score"><span>CGPA</span><strong>7.78</strong><small>Current academic record</small></div>
             </div>
           </Reveal>
