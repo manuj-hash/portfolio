@@ -15,10 +15,12 @@ function samplePhoto(image: HTMLImageElement): Data {
     const nx = x / width, ny = y / height, i = (y * width + x) * 4;
     const r = px[i], g = px[i+1], b = px[i+2], max = Math.max(r,g,b), min = Math.min(r,g,b);
     const brightness = (r+g+b)/3, saturation = (max-min)/Math.max(1,max);
-    let half = ny < .34 ? .285 : ny < .60 ? .305 : ny < .70 ? .34+(ny-.60)*1.4 : ny < .82 ? .48 : .49;
-    if (Math.abs(nx-.5) >= half) continue;
-    const head = ny < .66;
-    const keep = head ? brightness < 218 || saturation > .16 : ny >= .58 && brightness < 247 && (brightness < 238 || saturation > .035);
+    const head = ((nx-.5)/.31)**2 + ((ny-.34)/.32)**2 <= 1 && ny >= .045 && ny < .67;
+    const shoulderSpread = Math.max(0, Math.min(1, (ny-.64)/.18));
+    const shoulderWidth = .22 + .24 * shoulderSpread;
+    const torso = ny >= .64 && ny <= .99 && Math.abs(nx-.5) < shoulderWidth;
+    if (!head && !torso) continue;
+    const keep = head ? brightness < 215 : brightness < 249 && (brightness < 238 || saturation > .035);
     if (!keep) continue;
     const lum = brightness/255, depth = (.52-lum)*.34 + Math.sin(x*.071+y*.043)*.012;
     positions.push((nx-.5)*3.05, (.5-ny)*4.55, depth);
