@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
-  ArrowDown, ArrowUpRight, Github, Linkedin, Mail, Menu, X, Download,
+  ArrowDown, ArrowUpRight, Mail, Menu, X, Download,
   Code2, ShieldCheck, BriefcaseBusiness, GraduationCap, Award, Cpu,
   ExternalLink, Terminal, Layers3, BookOpen, Sparkles
 } from 'lucide-react';
@@ -291,8 +291,8 @@ export default function App() {
             <a className="button button-light contact-cta" href="mailto:manuj1903u@gmail.com">SAY HELLO <Mail size={16} /></a>
           </Reveal>
           <div className="social-links">
-            <a href="https://github.com/manuj-hash" target="_blank" rel="noreferrer"><Github /> GITHUB <ArrowUpRight size={13} /></a>
-            <a href="https://www.linkedin.com/in/manuj-u" target="_blank" rel="noreferrer"><Linkedin /> LINKEDIN <ArrowUpRight size={13} /></a>
+            <a href="https://github.com/manuj-hash" target="_blank" rel="noreferrer"><Code2 /> GITHUB <ArrowUpRight size={13} /></a>
+            <a href="https://www.linkedin.com/in/manuj-u" target="_blank" rel="noreferrer"><BriefcaseBusiness /> LINKEDIN <ArrowUpRight size={13} /></a>
             <a href="https://leetcode.com/u/MANUJ_U/" target="_blank" rel="noreferrer"><Code2 /> LEETCODE <ArrowUpRight size={13} /></a>
             <a href="https://www.codechef.com/users/spry_club_63" target="_blank" rel="noreferrer"><ExternalLink /> CODECHEF <ArrowUpRight size={13} /></a>
             <a href="mailto:manuj1903u@gmail.com"><Mail /> EMAIL <ArrowUpRight size={13} /></a>
