@@ -136,7 +136,14 @@ export default function App() {
   };
 
   return (
-    <div className="site-shell">
+    <div className="site-shell anchor-theme">
+      {booting && <div className="boot-screen" aria-hidden="true">
+        <div className="boot-mark"><span className="boot-orbit" /><span className="boot-core" /></div>
+        <div className="boot-word">MANUJ<span>.</span>U</div>
+        <div className="boot-track"><span /></div>
+        <div className="boot-caption">INITIALIZING PERSONAL ENVIRONMENT</div>
+      </div>}
+      <div className="ambient-glow" aria-hidden="true" />
       <div className="grain" aria-hidden="true" />
       <header className="nav-wrap anchor-nav">
         <a className="wordmark" href="#home" onClick={event => { event.preventDefault(); goTo('Home'); }}>MANUJ<span>.</span>U</a>
@@ -151,7 +158,8 @@ export default function App() {
 
       <main>
         <section className="hero" id="home">
-          <div className="hero-grid" />\n          <div className="hero-atmosphere" aria-hidden="true" />
+          <div className="hero-grid" />
+          <div className="hero-atmosphere" aria-hidden="true" />
           <div className="hero-copy">
             <motion.div className="eyebrow" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .15 }}>
               <span className="eyebrow-line" /> COMPUTER SCIENCE & BUSINESS SYSTEMS
