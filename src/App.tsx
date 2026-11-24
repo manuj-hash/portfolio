@@ -5,7 +5,7 @@ import {
   Code2, ShieldCheck, BriefcaseBusiness, GraduationCap, Award, Cpu,
   ExternalLink, Terminal, Layers3, BookOpen, Sparkles
 } from 'lucide-react';
-import ParticlePortrait from './components/ParticlePortrait';
+import AnchorParticleScene from './components/AnchorParticleScene';
 
 const navigation = ['About', 'Projects', 'Skills', 'Journey', 'Achievements', 'Education', 'Contact'];
 
@@ -110,6 +110,12 @@ const certifications = [
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState('Home');
+  const [booting, setBooting] = useState(true);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setBooting(false), 2100);
+    return () => window.clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
     const ids = ['home', ...navigation.map(item => item.toLowerCase())];
@@ -132,7 +138,7 @@ export default function App() {
   return (
     <div className="site-shell">
       <div className="grain" aria-hidden="true" />
-      <header className="nav-wrap">
+      <header className="nav-wrap anchor-nav">
         <a className="wordmark" href="#home" onClick={event => { event.preventDefault(); goTo('Home'); }}>MANUJ<span>.</span>U</a>
         <nav className={menuOpen ? 'nav-links open' : 'nav-links'} aria-label="Main navigation">
           {navigation.map(item => (
@@ -145,7 +151,7 @@ export default function App() {
 
       <main>
         <section className="hero" id="home">
-          <div className="hero-grid" />
+          <div className="hero-grid" />\n          <div className="hero-atmosphere" aria-hidden="true" />
           <div className="hero-copy">
             <motion.div className="eyebrow" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .15 }}>
               <span className="eyebrow-line" /> COMPUTER SCIENCE & BUSINESS SYSTEMS
@@ -163,11 +169,13 @@ export default function App() {
             </motion.div>
             <div className="hero-index"><span>01</span> / DEVELOPER PORTFOLIO <span className="index-rule" /></div>
           </div>
-          <div className="hero-visual">
-            <ParticlePortrait />
-            <div className="visual-orbit orbit-one" />
-            <div className="visual-orbit orbit-two" />
-            <div className="visual-coordinate">11°00' N<br />76°58' E</div>
+          <div className="hero-visual anchor-hero-visual">
+            <AnchorParticleScene />
+            <div className="scene-vignette" />
+            <div className="scene-label scene-label-top"><span className="live-dot" /> DIGITAL ECOSYSTEM <span>01 / 07</span></div>
+            <div className="scene-label scene-label-bottom">PARTICLE FIELD <span>REACTIVE ENVIRONMENT</span></div>
+            <div className="floating-card floating-card-left"><span className="floating-icon">✳</span><div><strong>Curious by nature</strong><small>Always exploring</small></div></div>
+            <div className="floating-card floating-card-right"><span className="floating-icon">⌘</span><div><strong>Building with purpose</strong><small>Code · Systems · Ideas</small></div></div>
           </div>
           <a className="scroll-cue" href="#about" onClick={event => { event.preventDefault(); goTo('About'); }}><span className="scroll-line" /> SCROLL TO EXPLORE <ArrowDown size={13} /></a>
           <div className="hero-side-note">THINK / BUILD / IMPROVE</div>
